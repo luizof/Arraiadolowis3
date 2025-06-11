@@ -31,7 +31,7 @@ async function load(){
     const tr=document.createElement('tr');
     tr.dataset.index=idx;
     tr.innerHTML=`<td><input data-field="name" value="${a.name}" disabled></td>`+
-      `<td><input data-field="time" type="datetime-local" value="${new Date(a.time).toISOString().slice(0,16)}" disabled></td>`+
+      `<td><input data-field="time" type="datetime-local" value="${a.time}" disabled></td>`+
       `<td><button data-action="edit">Editar</button>`+
       `<button data-action="save" style="display:none">Salvar</button>`+
       `<button data-action="delete">Excluir</button></td>`;
