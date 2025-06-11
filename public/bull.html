@@ -13,6 +13,8 @@ label{display:block;margin-top:10px;}
 <label>Jogador <input id="bullPlayer" list="players"></label>
 <label>Tempo <input id="bullTime" type="number"></label>
 <button onclick="addBull()">Registrar</button>
+<button id="finishBtn" onclick="confirmFinish()">Finalizar Competição</button>
+<button id="newBtn" onclick="newCompetition()" style="display:none">Nova Competição</button>
 <datalist id="players"></datalist>
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
@@ -40,7 +42,16 @@ async function ensurePlayer(name){
 }
 async function addBull(){await ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});bullPlayer.value='';bullTime.value='';}
 const playersElem=document.getElementById('players');
+const finishBtn=document.getElementById('finishBtn');
+const newBtn=document.getElementById('newBtn');
+function confirmFinish(){
+  const ans=prompt("Digite 'arraiadolowis' para confirmar");
+  if(ans==='arraiadolowis'){post('/api/bull/finish',{});finishBtn.style.display='none';newBtn.style.display='inline';}
+}
+function newCompetition(){post('/api/bull/new',{});newBtn.style.display='none';finishBtn.style.display='inline';}
+function loadState(){fetch('/api/state').then(r=>r.json()).then(s=>{if(s.bullFinished){finishBtn.style.display='none';newBtn.style.display='inline';}});}
 loadPlayers();
+loadState();
 </script>
 </body>
 </html>
