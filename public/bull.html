@@ -16,6 +16,8 @@ label{display:block;margin-top:10px;}
 <button id="finishBtn" onclick="confirmFinish()">Finalizar Competição</button>
 <button id="newBtn" onclick="newCompetition()" style="display:none">Nova Competição</button>
 <datalist id="players"></datalist>
+<h2>Histórico</h2>
+<table id="hist"></table>
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
@@ -42,6 +44,29 @@ async function ensurePlayer(name){
 }
 async function addBull(){await ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});bullPlayer.value='';bullTime.value='';}
 const playersElem=document.getElementById('players');
+ codex/adicionar-histórico-de-registros-editável
+function loadHistory(){
+  fetch('/api/state').then(r=>r.json()).then(s=>{
+    const rows=s.bullTimes.map((b,i)=>`<tr>
+      <td><input data-i="${i}" class="name" value="${b.name}" list="players"></td>
+      <td><input data-i="${i}" class="time" type="number" value="${b.time}"></td>
+      <td><button onclick="save(${i})">Salvar</button><button onclick="del(${i})">Excluir</button></td>
+    </tr>`).join('');
+    document.getElementById('hist').innerHTML=`<tbody>${rows}</tbody>`;
+  });
+}
+function save(i){
+  const name=document.querySelector(`input.name[data-i="${i}"]`).value;
+  const time=document.querySelector(`input.time[data-i="${i}"]`).value;
+  ensurePlayer(name);
+  fetch('/api/bull/'+i,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,time})}).then(loadHistory);
+}
+function del(i){
+  fetch('/api/bull/'+i,{method:'DELETE'}).then(loadHistory);
+}
+loadPlayers();
+loadHistory();
+
 const finishBtn=document.getElementById('finishBtn');
 const newBtn=document.getElementById('newBtn');
 function confirmFinish(){
@@ -52,6 +77,7 @@ function newCompetition(){post('/api/bull/new',{});newBtn.style.display='none';f
 function loadState(){fetch('/api/state').then(r=>r.json()).then(s=>{if(s.bullFinished){finishBtn.style.display='none';newBtn.style.display='inline';}});}
 loadPlayers();
 loadState();
+ main
 </script>
 </body>
 </html>

@@ -15,6 +15,8 @@ label{display:block;margin-top:10px;}
 <label>3º <input id="bingo3" list="players"></label>
 <button onclick="addBingo()">Registrar</button>
 <datalist id="players"></datalist>
+<h2>Histórico</h2>
+<table id="hist"></table>
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
@@ -41,7 +43,30 @@ async function ensurePlayer(name){
 }
 async function addBingo(){for(const n of [bingo1.value,bingo2.value,bingo3.value]) await ensurePlayer(n);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});bingo1.value='';bingo2.value='';bingo3.value='';}
 const playersElem=document.getElementById('players');
+function loadHistory(){
+  fetch('/api/state').then(r=>r.json()).then(s=>{
+    const b=s.bingoWinners||{first:'',second:'',third:''};
+    const row=`<tr>
+      <td><input id="h1" value="${b.first||''}" list="players"></td>
+      <td><input id="h2" value="${b.second||''}" list="players"></td>
+      <td><input id="h3" value="${b.third||''}" list="players"></td>
+      <td><button onclick="save()">Salvar</button><button onclick="del()">Excluir</button></td>
+    </tr>`;
+    document.getElementById('hist').innerHTML=`<tbody>${row}</tbody>`;
+  });
+}
+function save(){
+  const first=document.getElementById('h1').value;
+  const second=document.getElementById('h2').value;
+  const third=document.getElementById('h3').value;
+  [first,second,third].forEach(ensurePlayer);
+  fetch('/api/bingo',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({first,second,third})}).then(loadHistory);
+}
+function del(){
+  fetch('/api/bingo',{method:'DELETE'}).then(loadHistory);
+}
 loadPlayers();
+loadHistory();
 </script>
 </body>
 </html>
