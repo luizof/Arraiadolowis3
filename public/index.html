@@ -22,7 +22,11 @@ function render(){
   if(state.bullTimes.length>0){
     const sorted=[...state.bullTimes].sort((a,b)=>a.time-b.time).slice(0,6);
     let html='<h1>Top Touro</h1><ol>';let i=0;
-    sorted.forEach(r=>{i++; html+=`<li><span class="team-${state.players[r.name]}">${r.name}</span> - ${r.time}s ${i==1?'🏆':''}</li>`;});
+    sorted.forEach(r=>{
+      i++;
+      const points = i===1 ? state.points.bullFirst : i===2 ? state.points.bullSecond : 0;
+      html+=`<li><span class="team-${state.players[r.name]}">${r.name}</span> - ${r.time}s (${points} pts) ${i==1?'🏆':''}</li>`;
+    });
     html+='</ol>';
     slides.push({bg:'darkred',html});
   }
