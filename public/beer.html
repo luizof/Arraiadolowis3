@@ -21,11 +21,9 @@ label{display:block;margin-top:10px;}
 <table id="hist"></table>
 <datalist id="playersBlue"></datalist>
 <datalist id="playersYellow"></datalist>
-main
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
- codex/atualizar-seleção-de-vencedor-e-restrição-de-time
 let teamNames={blue:'Azul',yellow:'Amarelo'};
 function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;updateLists();});}
 function updateLists(){
@@ -91,8 +89,6 @@ function del(i){
 loadPlayers();
 loadHistory();
 loadTeams();
-
- main
 </script>
 </body>
 </html>
