@@ -19,17 +19,19 @@ let state={};
 function render(){
   slidesEl.innerHTML='';
   const slides=[];
-  if(state.bullTimes.length>0){
-    const sorted=[...state.bullTimes].sort((a,b)=>a.time-b.time).slice(0,6);
-    let html='<h1>Top Touro</h1><ol>';let i=0;
-    sorted.forEach(r=>{
-      i++;
-      const points = i===1 ? state.points.bullFirst : i===2 ? state.points.bullSecond : 0;
-      html+=`<li><span class="team-${state.players[r.name]}">${r.name}</span> - ${r.time}s (${points} pts) ${i==1?'🏆':''}</li>`;
-    });
-    html+='</ol>';
-    slides.push({bg:'darkred',html});
-  }
+    if(state.bullTimes.length>0){
+      const keys=['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
+      const sorted=[...state.bullTimes].sort((a,b)=>a.time-b.time).slice(0,keys.length);
+      let html='<h1>Top Touro</h1><ol>';let i=0;
+      sorted.forEach(r=>{
+        const k=keys[i];
+        const pts=state.points[k]||0;
+        html+=`<li><span class="team-${state.players[r.name]}">${r.name}</span> - ${r.time}s (${pts} pts) ${i==0?'🏆':''}</li>`;
+        i++;
+      });
+      html+='</ol>';
+      slides.push({bg:'darkred',html});
+    }
   if(state.cottonWars.length>0){
     let html='<h1>Guerra de Cotonete</h1><ul>';
     state.cottonWars.slice(-5).forEach(b=>{html+=`<li><span class="team-${state.players[b.p1]}">${b.p1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}</span> 🏆 <span class="team-${state.players[b.winner]}">${b.winner}</span></li>`});

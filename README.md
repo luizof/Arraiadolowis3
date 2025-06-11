@@ -37,5 +37,4 @@ The provided Dockerfile uses the official `node:20` image as its base. You can s
 docker run -p 3000:3000 arraia
 ```
 
-Then access `http://localhost:3000/` for slides and `http://localhost:3000/admin.html` for the admin menu.
-The players list can be reached directly at `http://localhost:3000/players.html`.
+

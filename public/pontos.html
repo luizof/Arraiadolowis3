@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Configurar Pontos</title>
+<style>
+body{font-family:sans-serif;}
+label{display:block;margin-top:10px;}
+</style>
+</head>
+<body>
+<h1>Editar Pontos</h1>
+<div>
+<label>1º lugar Touro <input id="bullFirst" type="number"></label>
+<label>2º lugar Touro <input id="bullSecond" type="number"></label>
+<label>3º lugar Touro <input id="bullThird" type="number"></label>
+<label>4º lugar Touro <input id="bullFourth" type="number"></label>
+<label>5º lugar Touro <input id="bullFifth" type="number"></label>
+<label>1º lugar Bingo <input id="bingoFirst" type="number"></label>
+<label>2º lugar Bingo <input id="bingoSecond" type="number"></label>
+<label>Vitória Beer Pong <input id="beerWin" type="number"></label>
+<label>Vitória Cotonete <input id="cottonWin" type="number"></label>
+<label>Vitória Pacal <input id="pacalWin" type="number"></label>
+<button onclick="savePoints()">Salvar</button>
+</div>
+<script>
+function loadPoints(){
+  fetch('/api/state').then(r=>r.json()).then(s=>{
+    const p=s.points;
+    bullFirst.value=p.bullFirst||0;
+    bullSecond.value=p.bullSecond||0;
+    bullThird.value=p.bullThird||0;
+    bullFourth.value=p.bullFourth||0;
+    bullFifth.value=p.bullFifth||0;
+    bingoFirst.value=p.bingoFirst||0;
+    bingoSecond.value=p.bingoSecond||0;
+    beerWin.value=p.beerWin||0;
+    cottonWin.value=p.cottonWin||0;
+    pacalWin.value=p.pacalWin||0;
+  });
+}
+function savePoints(){
+  const pts={
+    bullFirst:bullFirst.value,
+    bullSecond:bullSecond.value,
+    bullThird:bullThird.value,
+    bullFourth:bullFourth.value,
+    bullFifth:bullFifth.value,
+    bingoFirst:bingoFirst.value,
+    bingoSecond:bingoSecond.value,
+    beerWin:beerWin.value,
+    cottonWin:cottonWin.value,
+    pacalWin:pacalWin.value
+  };
+  fetch('/api/config/points',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pts)});
+}
+loadPoints();
+</script>
+</body>
+</html>
