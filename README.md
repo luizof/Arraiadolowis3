@@ -61,3 +61,7 @@ Then access `http://localhost:3000/` for slides,
 ### Background images
 
 Add your desired slide backgrounds in the `public/backgrounds` directory using the filenames listed above. When present, they will automatically be used in the slideshow.
+
+### Admin header image
+
+To show a logo on the admin menu, place an image file named `admin-header.png` inside `public/images`. When present it will appear centered at the top of `admin.html`.
