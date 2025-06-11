@@ -108,14 +108,23 @@ app.post('/api/reset', (req,res)=>{
   res.end();
 });
 
-const server = app.listen(port, ()=>{
-  console.log('Server listening on', port);
-});
+function startServer() {
+  const server = app.listen(port, () => {
+    console.log('Server listening on', port);
+  });
 
-const wss = new WebSocket.Server({server});
-function broadcast(){
-  computeScores();
-  const msg = JSON.stringify(data);
-  wss.clients.forEach(c=> c.readyState===WebSocket.OPEN && c.send(msg));
+  const wss = new WebSocket.Server({ server });
+  function broadcast() {
+    computeScores();
+    const msg = JSON.stringify(data);
+    wss.clients.forEach(c => c.readyState === WebSocket.OPEN && c.send(msg));
+  }
+  setInterval(broadcast, 5000);
+  return { server, wss };
 }
-setInterval(broadcast,5000);
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = { app, startServer };
