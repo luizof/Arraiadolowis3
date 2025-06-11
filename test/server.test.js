@@ -15,7 +15,6 @@ describe('Express API', () => {
     expect(res.body.players.Alice).toBe('blue');
   });
 
-codex/implementar-página-lineup
   it('manages attractions', async () => {
     await request(app)
       .post('/api/attraction')
@@ -42,6 +41,7 @@ codex/implementar-página-lineup
       .expect(200);
 
     expect(empty.body).toEqual([]);
+  });
 
   it('updates points configuration', async () => {
     await request(app)
@@ -54,6 +54,24 @@ codex/implementar-página-lineup
       .expect(200);
 
     expect(res.body.points.bullFirst).toBe(99);
-main
+  });
+
+  it('ignores scores for removed players', async () => {
+    await request(app).post('/api/player').send({ name: 'Alice', team: 'blue' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'Bob', team: 'yellow' }).expect(200);
+
+    await request(app)
+      .post('/api/cotton')
+      .send({ p1: 'Alice', p2: 'Bob', winner: 'Alice' })
+      .expect(200);
+
+    await request(app).delete('/api/player/Alice').expect(200);
+
+    const res = await request(app).get('/api/state').expect(200);
+
+    expect(res.body.players.Alice).toBeUndefined();
+    expect(res.body.scores.blue).toBe(0);
+    expect(res.body.scores.yellow).toBe(0);
+    expect('undefined' in res.body.scores).toBe(false);
   });
 });
