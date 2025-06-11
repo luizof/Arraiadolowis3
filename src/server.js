@@ -126,6 +126,25 @@ app.post('/api/attraction', (req,res)=>{
   res.end();
 });
 
+app.get('/api/attractions', (req,res)=>{
+  res.json(data.attractions);
+});
+
+app.put('/api/attraction/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if (Number.isNaN(idx) || !data.attractions[idx]) return res.status(404).end();
+  const { time, name } = req.body;
+  data.attractions[idx] = { time, name };
+  res.end();
+});
+
+app.delete('/api/attraction/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if (Number.isNaN(idx) || !data.attractions[idx]) return res.status(404).end();
+  data.attractions.splice(idx,1);
+  res.end();
+});
+
 app.post('/api/config/teamNames', (req,res)=>{
   data.teamNames=req.body;
   res.end();

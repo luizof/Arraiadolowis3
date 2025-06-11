@@ -15,6 +15,34 @@ describe('Express API', () => {
     expect(res.body.players.Alice).toBe('blue');
   });
 
+codex/implementar-página-lineup
+  it('manages attractions', async () => {
+    await request(app)
+      .post('/api/attraction')
+      .send({ name: 'Show', time: '2023-01-01T10:00:00' })
+      .expect(200);
+
+    await request(app)
+      .put('/api/attraction/0')
+      .send({ name: 'Show 2', time: '2023-01-01T11:00:00' })
+      .expect(200);
+
+    const list = await request(app)
+      .get('/api/attractions')
+      .expect(200);
+
+    expect(list.body[0]).toEqual({ name: 'Show 2', time: '2023-01-01T11:00:00' });
+
+    await request(app)
+      .delete('/api/attraction/0')
+      .expect(200);
+
+    const empty = await request(app)
+      .get('/api/attractions')
+      .expect(200);
+
+    expect(empty.body).toEqual([]);
+
   it('updates points configuration', async () => {
     await request(app)
       .post('/api/config/points')
@@ -26,5 +54,6 @@ describe('Express API', () => {
       .expect(200);
 
     expect(res.body.points.bullFirst).toBe(99);
+main
   });
 });

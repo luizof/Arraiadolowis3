@@ -20,6 +20,7 @@ This project provides a simple slide show and admin panel for a local party scor
   - Record results for each activity.
   - Configure attraction times and team names.
   - Reset all data when needed.
+  - Manage the attraction lineup through a simple editor.
 
 ## Usage
 
@@ -36,10 +37,10 @@ The provided Dockerfile uses the official `node:20` image as its base. You can s
 ```bash
 docker run -p 3000:3000 arraia
 ```
-<<<<<<< codex/implementar-página-de-edição-de-pontuação
+
+
 Then access `http://localhost:3000/` for slides, 
 `http://localhost:3000/admin.html` for the admin panel 
 `http://localhost:3000/pontos.html` to configure scoring.
 `http://localhost:3000/players.html`.
->>>>>>> main
-
+`http://localhost:3000/lineup.html` for the lineup editor.
