@@ -19,8 +19,27 @@ label{display:block;margin-top:10px;}
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
 function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${n}">`).join('');});}
-function ensurePlayer(name){if(!name||players[name])return;const team=prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}}
-function addBingo(){[bingo1.value,bingo2.value,bingo3.value].forEach(ensurePlayer);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});bingo1.value='';bingo2.value='';bingo3.value='';}
+function askTeam(name){
+  return new Promise(resolve=>{
+    const overlay=document.createElement('div');
+    Object.assign(overlay.style,{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center'});
+    overlay.innerHTML=`<div style="background:white;padding:20px;text-align:center;">
+        <p>Selecione o time para ${name}</p>
+        <button id="chooseBlue">Azul</button>
+        <button id="chooseYellow">Amarelo</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#chooseBlue').onclick=()=>{done('blue');};
+    overlay.querySelector('#chooseYellow').onclick=()=>{done('yellow');};
+    function done(team){document.body.removeChild(overlay);resolve(team);}
+  });
+}
+async function ensurePlayer(name){
+  if(!name||players[name])return;
+  const team=await askTeam(name);
+  if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}
+}
+async function addBingo(){for(const n of [bingo1.value,bingo2.value,bingo3.value]) await ensurePlayer(n);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});bingo1.value='';bingo2.value='';bingo3.value='';}
 const playersElem=document.getElementById('players');
 loadPlayers();
 </script>
