@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin</title>
+<style>
+body{font-family:sans-serif;}
+label{display:block;margin-top:10px;}
+</style>
+</head>
+<body>
+<h1>Admin</h1>
+<div>
+<label>Nome do time azul <input id="teamBlue"/></label>
+<label>Nome do time amarelo <input id="teamYellow"/></label>
+<button onclick="saveTeams()">Salvar</button>
+</div>
+<hr>
+<div>
+<h2>Cadastrar jogador</h2>
+<label>Nome <input id="playerName"/></label>
+<select id="playerTeam"><option value="blue">Azul</option><option value="yellow">Amarelo</option></select>
+<button onclick="addPlayer()">Adicionar</button>
+</div>
+<hr>
+<div>
+<h2>Touro Mecanico</h2>
+<label>Jogador <input id="bullPlayer"/></label>
+<label>Tempo <input id="bullTime" type="number"/></label>
+<button onclick="addBull()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Guerra de Cotonete</h2>
+<label>P1 <input id="cottonP1"/></label>
+<label>P2 <input id="cottonP2"/></label>
+<label>Vencedor <input id="cottonWin"/></label>
+<button onclick="addCotton()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Beer Pong</h2>
+<label>Time1 Jogador1 <input id="beerT1P1"/></label>
+<label>Time1 Jogador2 <input id="beerT1P2"/></label>
+<label>Time2 Jogador1 <input id="beerT2P1"/></label>
+<label>Time2 Jogador2 <input id="beerT2P2"/></label>
+<label>Vencedor <input id="beerWin"/></label>
+<button onclick="addBeer()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Pacal</h2>
+<label>P1 <input id="pacalP1"/></label>
+<label>P2 <input id="pacalP2"/></label>
+<label>Vencedor <input id="pacalWin"/></label>
+<button onclick="addPacal()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Bingo</h2>
+<label>1º <input id="bingo1"/></label>
+<label>2º <input id="bingo2"/></label>
+<label>3º <input id="bingo3"/></label>
+<button onclick="addBingo()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Atração</h2>
+<label>Horario (YYYY-MM-DDTHH:MM:SS) <input id="attrTime"/></label>
+<label>Nome <input id="attrName"/></label>
+<button onclick="addAttraction()">Adicionar</button>
+</div>
+<hr>
+<button onclick="resetAll()">Zerar Tudo</button>
+<script>
+function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});} 
+function saveTeams(){post('/api/config/teamNames',{blue:teamBlue.value,yellow:teamYellow.value});}
+function addPlayer(){post('/api/player',{name:playerName.value,team:playerTeam.value});}
+function addBull(){post('/api/bull',{name:bullPlayer.value,time:bullTime.value});}
+function addCotton(){post('/api/cotton',{p1:cottonP1.value,p2:cottonP2.value,winner:cottonWin.value});}
+function addBeer(){post('/api/beer',{team1:[beerT1P1.value,beerT1P2.value],team2:[beerT2P1.value,beerT2P2.value],winner:beerWin.value});}
+function addPacal(){post('/api/pacal',{p1:pacalP1.value,p2:pacalP2.value,winner:pacalWin.value});}
+function addBingo(){post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});}
+function addAttraction(){post('/api/attraction',{time:attrTime.value,name:attrName.value});}
+function resetAll(){post('/api/reset',{});}
+</script>
+</body>
+</html>

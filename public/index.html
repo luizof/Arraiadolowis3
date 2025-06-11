@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slides</title>
+<style>
+body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color:white;text-align:center;}
+.slide{display:none;position:absolute;top:0;left:0;width:100%;height:100%;background-size:cover;background-position:center;padding:20px;}
+.active{display:block;}
+.team-blue{color:blue;}
+.team-yellow{color:gold;}
+</style>
+</head>
+<body>
+<div id="slides"></div>
+<script>
+const slidesEl=document.getElementById('slides');
+let state={};
+function render(){
+  slidesEl.innerHTML='';
+  const slides=[];
+  if(state.bullTimes.length>0){
+    const sorted=[...state.bullTimes].sort((a,b)=>a.time-b.time).slice(0,6);
+    let html='<h1>Top Touro</h1><ol>';let i=0;
+    sorted.forEach(r=>{i++; html+=`<li><span class="team-${state.players[r.name]}">${r.name}</span> - ${r.time}s ${i==1?'🏆':''}</li>`;});
+    html+='</ol>';
+    slides.push({bg:'darkred',html});
+  }
+  if(state.cottonWars.length>0){
+    let html='<h1>Guerra de Cotonete</h1><ul>';
+    state.cottonWars.slice(-5).forEach(b=>{html+=`<li><span class="team-${state.players[b.p1]}">${b.p1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}</span> 🏆 <span class="team-${state.players[b.winner]}">${b.winner}</span></li>`});
+    html+='</ul>';
+    slides.push({bg:'green',html});
+  }
+  if(state.bingoWinners){
+    let html='<h1>Bingo</h1><ol>';
+    html+=`<li><span class="team-${state.players[state.bingoWinners.first]}">${state.bingoWinners.first}</span> 🏆</li>`;
+    html+=`<li><span class="team-${state.players[state.bingoWinners.second]}">${state.bingoWinners.second}</span></li>`;
+    html+=`<li><span class="team-${state.players[state.bingoWinners.third]}">${state.bingoWinners.third}</span></li>`;
+    html+='</ol>';
+    slides.push({bg:'purple',html});
+  }
+  if(state.beerPongs.length>0){
+    let html='<h1>Beer Pong</h1><ul>';
+    state.beerPongs.slice(-5).forEach(b=>{html+=`<li>${b.team1.map(p=>`<span class="team-${state.players[p]}">${p}</span>`).join(' & ')} vs ${b.team2.map(p=>`<span class="team-${state.players[p]}">${p}</span>`).join(' & ')} 🏆 <span class="team-${state.players[b.winner]}">${b.winner}</span></li>`});
+    html+='</ul>';
+    slides.push({bg:'orange',html});
+  }
+  if(state.pacalWars.length>0){
+    let html='<h1>Pacal</h1><ul>';
+    state.pacalWars.slice(-5).forEach(b=>{html+=`<li><span class="team-${state.players[b.p1]}">${b.p1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}</span> 🏆 <span class="team-${state.players[b.winner]}">${b.winner}</span></li>`});
+    html+='</ul>';
+    slides.push({bg:'brown',html});
+  }
+  if(state.attractions.length>0){
+    const now=new Date();
+    const current=state.attractions.find(a=> new Date(a.time)<=now);
+    const next=state.attractions.find(a=> new Date(a.time)>now);
+    let html='<h1>Atrações</h1>';
+    if(current) html+=`<p>Agora: ${current.name}</p>`;
+    if(next){const diff=Math.floor((new Date(next.time)-now)/1000);html+=`<p>Em seguida: ${next.name} (em ${diff}s)</p>`;} 
+    slides.push({bg:'blue',html});
+  }
+  const scoreEntries=Object.entries(state.scores).sort((a,b)=>b[1]-a[1]);
+  let html='<h1>Placar</h1><ul>';
+  scoreEntries.forEach(([team,score],i)=>{html+=`<li>${state.teamNames[team]} - ${score} ${i==0?'🏆':''}</li>`});
+  html+='</ul>';
+  slides.push({bg:'black',html});
+
+  slides.forEach((s,i)=>{
+    const div=document.createElement('div');
+    div.className='slide';
+    div.style.background=s.bg;
+    div.innerHTML=s.html;
+    slidesEl.appendChild(div);
+  });
+  let idx=0;
+  function show(){
+    slidesEl.querySelectorAll('.slide').forEach((el,i)=>{el.classList.toggle('active',i===idx);});
+    idx=(idx+1)%slidesEl.children.length;
+  }
+  if(slidesEl.children.length>0){show();setInterval(show,5000);}
+}
+
+const ws=new WebSocket(`ws://${location.host}`);
+ws.onmessage=e=>{state=JSON.parse(e.data);render();};
+</script>
+</body>
+</html>
