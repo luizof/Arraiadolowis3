@@ -54,6 +54,7 @@ describe('Express API', () => {
       .expect(200);
 
     expect(res.body.points.bullFirst).toBe(99);
+codex/update-computescores-to-handle-undefined-players
   });
 
   it('ignores scores for removed players', async () => {
