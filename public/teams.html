@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Nomes dos Times</title>
+<style>
+body{font-family:sans-serif;padding:20px;}
+label{display:block;margin-top:10px;}
+</style>
+</head>
+<body>
+<h1>Nomes dos Times</h1>
+<label>Nome do time azul <input id="teamBlue"></label>
+<label>Nome do time amarelo <input id="teamYellow"></label>
+<button onclick="saveTeams()">Salvar</button>
+<script>
+function saveTeams(){
+  fetch('/api/config/teamNames',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({blue:teamBlue.value,yellow:teamYellow.value})
+  });
+}
+fetch('/api/state').then(r=>r.json()).then(s=>{
+  teamBlue.value=s.teamNames.blue||'';
+  teamYellow.value=s.teamNames.yellow||'';
+});
+</script>
+</body>
+</html>

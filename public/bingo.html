@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Bingo</title>
+<style>
+body{font-family:sans-serif;padding:20px;}
+label{display:block;margin-top:10px;}
+</style>
+</head>
+<body>
+<h1>Bingo</h1>
+<label>1º <input id="bingo1" list="players"></label>
+<label>2º <input id="bingo2" list="players"></label>
+<label>3º <input id="bingo3" list="players"></label>
+<button onclick="addBingo()">Registrar</button>
+<datalist id="players"></datalist>
+<script>
+function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
+let players={};
+function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${n}">`).join('');});}
+function ensurePlayer(name){if(!name||players[name])return;const team=prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}}
+function addBingo(){[bingo1.value,bingo2.value,bingo3.value].forEach(ensurePlayer);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});bingo1.value='';bingo2.value='';bingo3.value='';}
+const playersElem=document.getElementById('players');
+loadPlayers();
+</script>
+</body>
+</html>

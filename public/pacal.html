@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Pacal</title>
+<style>
+body{font-family:sans-serif;padding:20px;}
+label{display:block;margin-top:10px;}
+</style>
+</head>
+<body>
+<h1>Pacal</h1>
+<label>P1 <input id="pacalP1" list="players"></label>
+<label>P2 <input id="pacalP2" list="players"></label>
+<label>Vencedor <input id="pacalWin" list="players"></label>
+<button onclick="addPacal()">Registrar</button>
+<datalist id="players"></datalist>
+<script>
+function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
+let players={};
+function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${n}">`).join('');});}
+function ensurePlayer(name){if(!name||players[name])return;const team=prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}}
+function addPacal(){[pacalP1.value,pacalP2.value,pacalWin.value].forEach(ensurePlayer);post('/api/pacal',{p1:pacalP1.value,p2:pacalP2.value,winner:pacalWin.value});pacalP1.value='';pacalP2.value='';pacalWin.value='';}
+const playersElem=document.getElementById('players');
+loadPlayers();
+</script>
+</body>
+</html>

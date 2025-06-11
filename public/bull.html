@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Touro Mecânico</title>
+<style>
+body{font-family:sans-serif;padding:20px;}
+label{display:block;margin-top:10px;}
+</style>
+</head>
+<body>
+<h1>Touro Mecânico</h1>
+<label>Jogador <input id="bullPlayer" list="players"></label>
+<label>Tempo <input id="bullTime" type="number"></label>
+<button onclick="addBull()">Registrar</button>
+<datalist id="players"></datalist>
+<script>
+function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
+let players={};
+function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${n}">`).join('');});}
+function ensurePlayer(name){if(!name||players[name])return;const team=prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}}
+function addBull(){ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});bullPlayer.value='';bullTime.value='';}
+const playersElem=document.getElementById('players');
+loadPlayers();
+</script>
+</body>
+</html>

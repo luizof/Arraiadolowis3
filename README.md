@@ -38,9 +38,15 @@ The provided Dockerfile uses the official `node:20` image as its base. You can s
 docker run -p 3000:3000 arraia
 ```
 
-
-Then access `http://localhost:3000/` for slides, 
-`http://localhost:3000/admin.html` for the admin panel 
-`http://localhost:3000/pontos.html` to configure scoring.
-`http://localhost:3000/players.html`.
-`http://localhost:3000/lineup.html` for the lineup editor.
+Then access `http://localhost:3000/` for slides,
+`http://localhost:3000/admin.html` for the admin menu,
+`http://localhost:3000/players.html` to manage players,
+`http://localhost:3000/teams.html` to edit team names,
+`http://localhost:3000/bull.html` to register bull times,
+`http://localhost:3000/cotton.html` for cotonete battles,
+`http://localhost:3000/beer.html` for beer pong results,
+`http://localhost:3000/pacal.html` for pacal duels,
+`http://localhost:3000/bingo.html` to register bingo winners,
+`http://localhost:3000/pontos.html` to configure scoring,
+`http://localhost:3000/lineup.html` for the lineup editor,
+`http://localhost:3000/reset.html` to reset all data.

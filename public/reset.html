@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Resetar Dados</title>
+<style>
+body{font-family:sans-serif;padding:20px;}
+</style>
+</head>
+<body>
+<h1>Resetar Dados</h1>
+<button onclick="resetAll()">Zerar Tudo</button>
+<script>
+function resetAll(){fetch('/api/reset',{method:'POST'});}
+</script>
+</body>
+</html>
