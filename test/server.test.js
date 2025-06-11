@@ -74,4 +74,18 @@ describe('Express API', () => {
     expect(res.body.scores.yellow).toBe(0);
     expect('undefined' in res.body.scores).toBe(false);
   });
+
+  it('only scores bull when finished', async () => {
+    await request(app).post('/api/reset').expect(200);
+    await request(app).post('/api/player').send({ name: 'Alice', team: 'blue' }).expect(200);
+    await request(app).post('/api/bull').send({ name: 'Alice', time: 5 }).expect(200);
+
+    let res = await request(app).get('/api/state').expect(200);
+    expect(res.body.scores.blue).toBe(0);
+
+    await request(app).post('/api/bull/finish').expect(200);
+
+    res = await request(app).get('/api/state').expect(200);
+    expect(res.body.scores.blue).toBe(res.body.points.bullFirst);
+  });
 });

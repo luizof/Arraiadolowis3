@@ -12,6 +12,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 const data = {
   players: {}, // name -> team
   bullTimes: [], // {name, time}
+  bullFinished: false,
   cottonWars: [], // {p1, p2, winner}
   beerPongs: [], // {team1:[a,b], team2:[c,d], winner:team}
   pacalWars: [], // {p1,p2,winner}
@@ -36,7 +37,7 @@ const data = {
 
 function computeScores() {
   data.scores = {blue:0, yellow:0};
-  if (data.bullTimes.length > 0) {
+  if (data.bullFinished && data.bullTimes.length > 0) {
     const keys = ['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
     const sorted = [...data.bullTimes].sort((a,b)=>a.time-b.time).slice(0, keys.length);
     sorted.forEach((r,i)=>{
@@ -109,6 +110,17 @@ app.post('/api/bull', (req,res)=>{
   res.end();
 });
 
+app.post('/api/bull/finish', (req,res)=>{
+  data.bullFinished = true;
+  res.end();
+});
+
+app.post('/api/bull/new', (req,res)=>{
+  data.bullTimes = [];
+  data.bullFinished = false;
+  res.end();
+});
+
 app.post('/api/cotton', (req,res)=>{
   const {p1,p2,winner} = req.body;
   data.cottonWars.push({p1,p2,winner});
@@ -175,7 +187,7 @@ app.post('/api/config/points', (req,res)=>{
 
 app.post('/api/reset', (req,res)=>{
   Object.assign(data, {
-    players:{}, bullTimes:[], cottonWars:[], beerPongs:[], pacalWars:[], bingoWinners:null, attractions:[], scores:{blue:0,yellow:0}
+    players:{}, bullTimes:[], bullFinished:false, cottonWars:[], beerPongs:[], pacalWars:[], bingoWinners:null, attractions:[], scores:{blue:0,yellow:0}
   });
   res.end();
 });
