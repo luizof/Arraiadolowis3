@@ -121,8 +121,9 @@ app.post('/api/bingo', (req,res)=>{
 });
 
 app.post('/api/attraction', (req,res)=>{
-  const {time,name} = req.body;
-  data.attractions.push({time,name});
+  const { time, name } = req.body;
+  const iso = new Date(time).toISOString();
+  data.attractions.push({ time: iso, name });
   res.end();
 });
 
@@ -134,7 +135,8 @@ app.put('/api/attraction/:index', (req,res)=>{
   const idx = parseInt(req.params.index,10);
   if (Number.isNaN(idx) || !data.attractions[idx]) return res.status(404).end();
   const { time, name } = req.body;
-  data.attractions[idx] = { time, name };
+  const iso = new Date(time).toISOString();
+  data.attractions[idx] = { time: iso, name };
   res.end();
 });
 
