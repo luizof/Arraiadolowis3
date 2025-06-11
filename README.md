@@ -13,7 +13,14 @@ This project provides a simple slide show and admin panel for a local party scor
   5. **Pacal** battle history.
   6. **Current and next attraction** based on the schedule, including a countdown.
   7. **Overall team score** using a horizontal bar chart with the winning team on top and a trophy.
-- Every slide has a custom background color.
+  - Slides use custom background images. Place image files in `public/backgrounds` with the following names so they load automatically:
+    - `bull.jpg` - Top Touro
+    - `cotton.jpg` - Guerra de Cotonete
+    - `bingo.jpg` - Bingo
+    - `beer.jpg` - Beer Pong
+    - `pacal.jpg` - Pacal
+    - `attractions.jpg` - Atrações
+    - `score.jpg` - Placar
 - Player names are shown in their team color (blue or yellow).
 - The Admin panel lets you:
   - Register players and choose their team.
@@ -50,3 +57,7 @@ Then access `http://localhost:3000/` for slides,
 `http://localhost:3000/pontos.html` to configure scoring,
 `http://localhost:3000/lineup.html` for the lineup editor,
 `http://localhost:3000/reset.html` to reset all data.
+
+### Background images
+
+Add your desired slide backgrounds in the `public/backgrounds` directory using the filenames listed above. When present, they will automatically be used in the slideshow.
