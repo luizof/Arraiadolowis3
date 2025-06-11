@@ -10,22 +10,61 @@ label{display:block;margin-top:10px;}
 </head>
 <body>
 <h1>Beer Pong</h1>
-<label>Time1 Jogador1 <input id="beerT1P1" list="players"></label>
-<label>Time1 Jogador2 <input id="beerT1P2" list="players"></label>
-<label>Time2 Jogador1 <input id="beerT2P1" list="players"></label>
-<label>Time2 Jogador2 <input id="beerT2P2" list="players"></label>
-<label>Vencedor <input id="beerWin" list="players"></label>
+<label>Jogador1 (Time Azul) <input id="beerBlueP1" list="playersBlue"></label>
+<label>Jogador2 (Time Azul) <input id="beerBlueP2" list="playersBlue"></label>
+<label>Jogador1 (Time Amarelo) <input id="beerYellowP1" list="playersYellow"></label>
+<label>Jogador2 (Time Amarelo) <input id="beerYellowP2" list="playersYellow"></label>
+<label>Vencedor <select id="beerWin"></select></label>
 <button onclick="addBeer()">Registrar</button>
+codex/adicionar-histórico-de-registros-editável
 <datalist id="players"></datalist>
 <h2>Histórico</h2>
 <table id="hist"></table>
+<datalist id="playersBlue"></datalist>
+<datalist id="playersYellow"></datalist>
+main
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
+ codex/atualizar-seleção-de-vencedor-e-restrição-de-time
+let teamNames={blue:'Azul',yellow:'Amarelo'};
+function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;updateLists();});}
+function updateLists(){
+  const blue=Object.keys(players).filter(n=>players[n]==='blue');
+  const yellow=Object.keys(players).filter(n=>players[n]==='yellow');
+  playersBlueElem.innerHTML=blue.map(n=>`<option value="${n}">`).join('');
+  playersYellowElem.innerHTML=yellow.map(n=>`<option value="${n}">`).join('');
+}
+function loadTeams(){fetch('/api/state').then(r=>r.json()).then(s=>{teamNames=s.teamNames;beerWin.innerHTML=`<option value="blue">${teamNames.blue}</option><option value="yellow">${teamNames.yellow}</option>`;});}
+function ensurePlayer(name,teamHint){if(!name||players[name])return;const team=teamHint||prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;updateLists();}}
+function addBeer(){[beerBlueP1.value,beerBlueP2.value].forEach(n=>ensurePlayer(n,'blue'));[beerYellowP1.value,beerYellowP2.value].forEach(n=>ensurePlayer(n,'yellow'));post('/api/beer',{team1:[beerBlueP1.value,beerBlueP2.value],team2:[beerYellowP1.value,beerYellowP2.value],winner:beerWin.value});beerBlueP1.value='';beerBlueP2.value='';beerYellowP1.value='';beerYellowP2.value='';beerWin.value='';}
+const playersBlueElem=document.getElementById('playersBlue');
+const playersYellowElem=document.getElementById('playersYellow');
+
 function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${n}">`).join('');});}
-function ensurePlayer(name){if(!name||players[name])return;const team=prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}}
-function addBeer(){[beerT1P1.value,beerT1P2.value,beerT2P1.value,beerT2P2.value,beerWin.value].forEach(ensurePlayer);post('/api/beer',{team1:[beerT1P1.value,beerT1P2.value],team2:[beerT2P1.value,beerT2P2.value],winner:beerWin.value});beerT1P1.value='';beerT1P2.value='';beerT2P1.value='';beerT2P2.value='';beerWin.value='';}
+function askTeam(name){
+  return new Promise(resolve=>{
+    const overlay=document.createElement('div');
+    Object.assign(overlay.style,{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center'});
+    overlay.innerHTML=`<div style="background:white;padding:20px;text-align:center;">
+        <p>Selecione o time para ${name}</p>
+        <button id="chooseBlue">Azul</button>
+        <button id="chooseYellow">Amarelo</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#chooseBlue').onclick=()=>{done('blue');};
+    overlay.querySelector('#chooseYellow').onclick=()=>{done('yellow');};
+    function done(team){document.body.removeChild(overlay);resolve(team);}
+  });
+}
+async function ensurePlayer(name){
+  if(!name||players[name])return;
+  const team=await askTeam(name);
+  if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}
+}
+async function addBeer(){for(const n of [beerT1P1.value,beerT1P2.value,beerT2P1.value,beerT2P2.value,beerWin.value]) await ensurePlayer(n);post('/api/beer',{team1:[beerT1P1.value,beerT1P2.value],team2:[beerT2P1.value,beerT2P2.value],winner:beerWin.value});beerT1P1.value='';beerT1P2.value='';beerT2P1.value='';beerT2P2.value='';beerWin.value='';}
 const playersElem=document.getElementById('players');
+codex/adicionar-histórico-de-registros-editável
 function loadHistory(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const rows=s.beerPongs.map((b,i)=>`<tr>
@@ -53,6 +92,9 @@ function del(i){
 }
 loadPlayers();
 loadHistory();
+loadTeams();
+
+ main
 </script>
 </body>
 </html>

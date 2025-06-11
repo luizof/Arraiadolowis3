@@ -12,8 +12,9 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 const data = {
   players: {}, // name -> team
   bullTimes: [], // {name, time}
+  bullFinished: false,
   cottonWars: [], // {p1, p2, winner}
-  beerPongs: [], // {team1:[a,b], team2:[c,d], winner}
+  beerPongs: [], // {team1:[a,b], team2:[c,d], winner:team}
   pacalWars: [], // {p1,p2,winner}
   bingoWinners: null, // {first,second,third}
   attractions: [], // {time, name}
@@ -36,7 +37,7 @@ const data = {
 
 function computeScores() {
   data.scores = {blue:0, yellow:0};
-  if (data.bullTimes.length > 0) {
+  if (data.bullFinished && data.bullTimes.length > 0) {
     const keys = ['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
     const sorted = [...data.bullTimes].sort((a,b)=>a.time-b.time).slice(0, keys.length);
     sorted.forEach((r,i)=>{
@@ -52,7 +53,7 @@ function computeScores() {
     if(team) data.scores[team] += data.points.cottonWin;
   });
   data.beerPongs.forEach(b=>{
-    const team = data.players[b.winner];
+    const team = b.winner; // winner is stored as team
     if(team) data.scores[team] += data.points.beerWin;
   });
   data.pacalWars.forEach(b=>{
@@ -109,6 +110,7 @@ app.post('/api/bull', (req,res)=>{
   res.end();
 });
 
+ codex/adicionar-histórico-de-registros-editável
 app.put('/api/bull/:index', (req,res)=>{
   const idx = parseInt(req.params.index,10);
   if(Number.isNaN(idx) || !data.bullTimes[idx]) return res.status(404).end();
@@ -121,6 +123,16 @@ app.delete('/api/bull/:index', (req,res)=>{
   const idx = parseInt(req.params.index,10);
   if(Number.isNaN(idx) || !data.bullTimes[idx]) return res.status(404).end();
   data.bullTimes.splice(idx,1);
+
+app.post('/api/bull/finish', (req,res)=>{
+  data.bullFinished = true;
+  res.end();
+});
+
+app.post('/api/bull/new', (req,res)=>{
+  data.bullTimes = [];
+  data.bullFinished = false;
+main
   res.end();
 });
 
@@ -246,7 +258,7 @@ app.post('/api/config/points', (req,res)=>{
 
 app.post('/api/reset', (req,res)=>{
   Object.assign(data, {
-    players:{}, bullTimes:[], cottonWars:[], beerPongs:[], pacalWars:[], bingoWinners:null, attractions:[], scores:{blue:0,yellow:0}
+    players:{}, bullTimes:[], bullFinished:false, cottonWars:[], beerPongs:[], pacalWars:[], bingoWinners:null, attractions:[], scores:{blue:0,yellow:0}
   });
   res.end();
 });

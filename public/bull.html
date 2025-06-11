@@ -13,6 +13,8 @@ label{display:block;margin-top:10px;}
 <label>Jogador <input id="bullPlayer" list="players"></label>
 <label>Tempo <input id="bullTime" type="number"></label>
 <button onclick="addBull()">Registrar</button>
+<button id="finishBtn" onclick="confirmFinish()">Finalizar Competição</button>
+<button id="newBtn" onclick="newCompetition()" style="display:none">Nova Competição</button>
 <datalist id="players"></datalist>
 <h2>Histórico</h2>
 <table id="hist"></table>
@@ -20,9 +22,29 @@ label{display:block;margin-top:10px;}
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
 function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${n}">`).join('');});}
-function ensurePlayer(name){if(!name||players[name])return;const team=prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}}
-function addBull(){ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});bullPlayer.value='';bullTime.value='';}
+function askTeam(name){
+  return new Promise(resolve=>{
+    const overlay=document.createElement('div');
+    Object.assign(overlay.style,{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center'});
+    overlay.innerHTML=`<div style="background:white;padding:20px;text-align:center;">
+        <p>Selecione o time para ${name}</p>
+        <button id="chooseBlue">Azul</button>
+        <button id="chooseYellow">Amarelo</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#chooseBlue').onclick=()=>{done('blue');};
+    overlay.querySelector('#chooseYellow').onclick=()=>{done('yellow');};
+    function done(team){document.body.removeChild(overlay);resolve(team);}
+  });
+}
+async function ensurePlayer(name){
+  if(!name||players[name])return;
+  const team=await askTeam(name);
+  if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}
+}
+async function addBull(){await ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});bullPlayer.value='';bullTime.value='';}
 const playersElem=document.getElementById('players');
+ codex/adicionar-histórico-de-registros-editável
 function loadHistory(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const rows=s.bullTimes.map((b,i)=>`<tr>
@@ -44,6 +66,18 @@ function del(i){
 }
 loadPlayers();
 loadHistory();
+
+const finishBtn=document.getElementById('finishBtn');
+const newBtn=document.getElementById('newBtn');
+function confirmFinish(){
+  const ans=prompt("Digite 'arraiadolowis' para confirmar");
+  if(ans==='arraiadolowis'){post('/api/bull/finish',{});finishBtn.style.display='none';newBtn.style.display='inline';}
+}
+function newCompetition(){post('/api/bull/new',{});newBtn.style.display='none';finishBtn.style.display='inline';}
+function loadState(){fetch('/api/state').then(r=>r.json()).then(s=>{if(s.bullFinished){finishBtn.style.display='none';newBtn.style.display='inline';}});}
+loadPlayers();
+loadState();
+ main
 </script>
 </body>
 </html>
