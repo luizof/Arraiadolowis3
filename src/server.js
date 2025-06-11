@@ -41,18 +41,31 @@ function computeScores() {
     const sorted = [...data.bullTimes].sort((a,b)=>a.time-b.time).slice(0, keys.length);
     sorted.forEach((r,i)=>{
       const k = keys[i];
-      if(r && data.points[k]) {
-        data.scores[data.players[r.name]] += data.points[k];
+      const team = data.players[r.name];
+      if(r && data.points[k] && team) {
+        data.scores[team] += data.points[k];
       }
     });
   }
-  data.cottonWars.forEach(b=>{ data.scores[data.players[b.winner]] += data.points.cottonWin; });
-  data.beerPongs.forEach(b=>{ data.scores[data.players[b.winner]] += data.points.beerWin; });
-  data.pacalWars.forEach(b=>{ data.scores[data.players[b.winner]] += data.points.pacalWin; });
+  data.cottonWars.forEach(b=>{
+    const team = data.players[b.winner];
+    if(team) data.scores[team] += data.points.cottonWin;
+  });
+  data.beerPongs.forEach(b=>{
+    const team = data.players[b.winner];
+    if(team) data.scores[team] += data.points.beerWin;
+  });
+  data.pacalWars.forEach(b=>{
+    const team = data.players[b.winner];
+    if(team) data.scores[team] += data.points.pacalWin;
+  });
   if(data.bingoWinners){
-    if(data.bingoWinners.first) data.scores[data.players[data.bingoWinners.first]] += data.points.bingoFirst;
-    if(data.bingoWinners.second) data.scores[data.players[data.bingoWinners.second]] += data.points.bingoSecond;
-    if(data.bingoWinners.third) data.scores[data.players[data.bingoWinners.third]] += data.points.bingoThird;
+    if(data.bingoWinners.first && data.players[data.bingoWinners.first])
+      data.scores[data.players[data.bingoWinners.first]] += data.points.bingoFirst;
+    if(data.bingoWinners.second && data.players[data.bingoWinners.second])
+      data.scores[data.players[data.bingoWinners.second]] += data.points.bingoSecond;
+    if(data.bingoWinners.third && data.players[data.bingoWinners.third])
+      data.scores[data.players[data.bingoWinners.third]] += data.points.bingoThird;
   }
 }
 
@@ -173,6 +186,10 @@ function startServer() {
   });
 
   const wss = new WebSocket.Server({ server });
+  wss.on('connection', ws => {
+    computeScores();
+    ws.send(JSON.stringify(data));
+  });
   function broadcast() {
     computeScores();
     const msg = JSON.stringify(data);
