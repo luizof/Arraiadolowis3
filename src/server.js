@@ -109,9 +109,39 @@ app.post('/api/bull', (req,res)=>{
   res.end();
 });
 
+app.put('/api/bull/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if(Number.isNaN(idx) || !data.bullTimes[idx]) return res.status(404).end();
+  const {name,time} = req.body;
+  data.bullTimes[idx] = {name,time:parseFloat(time)};
+  res.end();
+});
+
+app.delete('/api/bull/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if(Number.isNaN(idx) || !data.bullTimes[idx]) return res.status(404).end();
+  data.bullTimes.splice(idx,1);
+  res.end();
+});
+
 app.post('/api/cotton', (req,res)=>{
   const {p1,p2,winner} = req.body;
   data.cottonWars.push({p1,p2,winner});
+  res.end();
+});
+
+app.put('/api/cotton/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if(Number.isNaN(idx) || !data.cottonWars[idx]) return res.status(404).end();
+  const {p1,p2,winner} = req.body;
+  data.cottonWars[idx] = {p1,p2,winner};
+  res.end();
+});
+
+app.delete('/api/cotton/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if(Number.isNaN(idx) || !data.cottonWars[idx]) return res.status(404).end();
+  data.cottonWars.splice(idx,1);
   res.end();
 });
 
@@ -121,15 +151,56 @@ app.post('/api/beer', (req,res)=>{
   res.end();
 });
 
+app.put('/api/beer/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if(Number.isNaN(idx) || !data.beerPongs[idx]) return res.status(404).end();
+  const {team1,team2,winner} = req.body;
+  data.beerPongs[idx] = {team1,team2,winner};
+  res.end();
+});
+
+app.delete('/api/beer/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if(Number.isNaN(idx) || !data.beerPongs[idx]) return res.status(404).end();
+  data.beerPongs.splice(idx,1);
+  res.end();
+});
+
 app.post('/api/pacal', (req,res)=>{
   const {p1,p2,winner} = req.body;
   data.pacalWars.push({p1,p2,winner});
   res.end();
 });
 
+app.put('/api/pacal/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if(Number.isNaN(idx) || !data.pacalWars[idx]) return res.status(404).end();
+  const {p1,p2,winner} = req.body;
+  data.pacalWars[idx] = {p1,p2,winner};
+  res.end();
+});
+
+app.delete('/api/pacal/:index', (req,res)=>{
+  const idx = parseInt(req.params.index,10);
+  if(Number.isNaN(idx) || !data.pacalWars[idx]) return res.status(404).end();
+  data.pacalWars.splice(idx,1);
+  res.end();
+});
+
 app.post('/api/bingo', (req,res)=>{
   const {first,second,third} = req.body;
   data.bingoWinners = {first,second,third};
+  res.end();
+});
+
+app.put('/api/bingo', (req,res)=>{
+  const {first,second,third} = req.body;
+  data.bingoWinners = {first,second,third};
+  res.end();
+});
+
+app.delete('/api/bingo', (req,res)=>{
+  data.bingoWinners = null;
   res.end();
 });
 

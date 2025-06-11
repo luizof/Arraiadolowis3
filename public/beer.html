@@ -17,6 +17,8 @@ label{display:block;margin-top:10px;}
 <label>Vencedor <input id="beerWin" list="players"></label>
 <button onclick="addBeer()">Registrar</button>
 <datalist id="players"></datalist>
+<h2>Histórico</h2>
+<table id="hist"></table>
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
@@ -24,7 +26,33 @@ function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=
 function ensurePlayer(name){if(!name||players[name])return;const team=prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}}
 function addBeer(){[beerT1P1.value,beerT1P2.value,beerT2P1.value,beerT2P2.value,beerWin.value].forEach(ensurePlayer);post('/api/beer',{team1:[beerT1P1.value,beerT1P2.value],team2:[beerT2P1.value,beerT2P2.value],winner:beerWin.value});beerT1P1.value='';beerT1P2.value='';beerT2P1.value='';beerT2P2.value='';beerWin.value='';}
 const playersElem=document.getElementById('players');
+function loadHistory(){
+  fetch('/api/state').then(r=>r.json()).then(s=>{
+    const rows=s.beerPongs.map((b,i)=>`<tr>
+      <td><input data-i="${i}" class="t1p1" value="${b.team1[0]}" list="players"></td>
+      <td><input data-i="${i}" class="t1p2" value="${b.team1[1]}" list="players"></td>
+      <td><input data-i="${i}" class="t2p1" value="${b.team2[0]}" list="players"></td>
+      <td><input data-i="${i}" class="t2p2" value="${b.team2[1]}" list="players"></td>
+      <td><input data-i="${i}" class="win" value="${b.winner}" list="players"></td>
+      <td><button onclick="save(${i})">Salvar</button><button onclick="del(${i})">Excluir</button></td>
+    </tr>`).join('');
+    document.getElementById('hist').innerHTML=`<tbody>${rows}</tbody>`;
+  });
+}
+function save(i){
+  const t1p1=document.querySelector(`input.t1p1[data-i="${i}"]`).value;
+  const t1p2=document.querySelector(`input.t1p2[data-i="${i}"]`).value;
+  const t2p1=document.querySelector(`input.t2p1[data-i="${i}"]`).value;
+  const t2p2=document.querySelector(`input.t2p2[data-i="${i}"]`).value;
+  const win=document.querySelector(`input.win[data-i="${i}"]`).value;
+  [t1p1,t1p2,t2p1,t2p2,win].forEach(ensurePlayer);
+  fetch('/api/beer/'+i,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({team1:[t1p1,t1p2],team2:[t2p1,t2p2],winner:win})}).then(loadHistory);
+}
+function del(i){
+  fetch('/api/beer/'+i,{method:'DELETE'}).then(loadHistory);
+}
 loadPlayers();
+loadHistory();
 </script>
 </body>
 </html>
