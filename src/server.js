@@ -14,7 +14,7 @@ const data = {
   bullTimes: [], // {name, time}
   bullFinished: false,
   cottonWars: [], // {p1, p2, winner}
-  beerPongs: [], // {team1:[a,b], team2:[c,d], winner}
+  beerPongs: [], // {team1:[a,b], team2:[c,d], winner:team}
   pacalWars: [], // {p1,p2,winner}
   bingoWinners: null, // {first,second,third}
   attractions: [], // {time, name}
@@ -53,7 +53,7 @@ function computeScores() {
     if(team) data.scores[team] += data.points.cottonWin;
   });
   data.beerPongs.forEach(b=>{
-    const team = data.players[b.winner];
+    const team = b.winner; // winner is stored as team
     if(team) data.scores[team] += data.points.beerWin;
   });
   data.pacalWars.forEach(b=>{

@@ -40,11 +40,11 @@ label{display:block;margin-top:10px;}
 <hr>
 <div>
 <h2>Beer Pong</h2>
-<label>Time1 Jogador1 <input id="beerT1P1" list="players"/></label>
-<label>Time1 Jogador2 <input id="beerT1P2" list="players"/></label>
-<label>Time2 Jogador1 <input id="beerT2P1" list="players"/></label>
-<label>Time2 Jogador2 <input id="beerT2P2" list="players"/></label>
-<label>Vencedor <input id="beerWin" list="players"/></label>
+<label>Jogador1 (Time Azul) <input id="beerBlueP1" list="playersBlue"/></label>
+<label>Jogador2 (Time Azul) <input id="beerBlueP2" list="playersBlue"/></label>
+<label>Jogador1 (Time Amarelo) <input id="beerYellowP1" list="playersYellow"/></label>
+<label>Jogador2 (Time Amarelo) <input id="beerYellowP2" list="playersYellow"/></label>
+<label>Vencedor <select id="beerWin"></select></label>
 <button onclick="addBeer()">Registrar</button>
 </div>
 <hr>
@@ -78,10 +78,37 @@ label{display:block;margin-top:10px;}
 <ul id="scoreBoard"></ul>
 </div>
 <datalist id="players"></datalist>
+<datalist id="playersBlue"></datalist>
+<datalist id="playersYellow"></datalist>
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players = {};
+let teamNames={blue:'Azul',yellow:'Amarelo'};
 function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;updateDatalist();});}
+ codex/atualizar-seleção-de-vencedor-e-restrição-de-time
+function updateDatalist(){
+  playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');
+  playersBlueElem.innerHTML=Object.keys(players).filter(n=>players[n]==='blue').map(n=>`<option value="${n}">`).join('');
+  playersYellowElem.innerHTML=Object.keys(players).filter(n=>players[n]==='yellow').map(n=>`<option value="${n}">`).join('');
+}
+function loadTeams(){fetch('/api/state').then(r=>r.json()).then(s=>{teamNames=s.teamNames;beerWin.innerHTML=`<option value="blue">${teamNames.blue}</option><option value="yellow">${teamNames.yellow}</option>`;});}
+function ensurePlayer(name,teamHint){if(!name||players[name])return;const team=teamHint||prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;updateDatalist();}}
+function saveTeams(){post('/api/config/teamNames',{blue:teamBlue.value,yellow:teamYellow.value});}
+function addPlayer(){post('/api/player',{name:playerName.value,team:playerTeam.value});players[playerName.value]=playerTeam.value;updateDatalist();}
+function addBull(){ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});}
+function addCotton(){[cottonP1.value,cottonP2.value,cottonWin.value].forEach(ensurePlayer);post('/api/cotton',{p1:cottonP1.value,p2:cottonP2.value,winner:cottonWin.value});}
+function addBeer(){
+  [beerBlueP1.value,beerBlueP2.value].forEach(n=>ensurePlayer(n,'blue'));
+  [beerYellowP1.value,beerYellowP2.value].forEach(n=>ensurePlayer(n,'yellow'));
+  post('/api/beer',{
+    team1:[beerBlueP1.value,beerBlueP2.value],
+    team2:[beerYellowP1.value,beerYellowP2.value],
+    winner:beerWin.value
+  });
+}
+function addPacal(){[pacalP1.value,pacalP2.value,pacalWin.value].forEach(ensurePlayer);post('/api/pacal',{p1:pacalP1.value,p2:pacalP2.value,winner:pacalWin.value});}
+function addBingo(){[bingo1.value,bingo2.value,bingo3.value].forEach(ensurePlayer);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});}
+
 function updateDatalist(){playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}
 function askTeam(name){
   return new Promise(resolve=>{
@@ -110,10 +137,14 @@ async function addCotton(){for(const n of [cottonP1.value,cottonP2.value,cottonW
 async function addBeer(){for(const n of [beerT1P1.value,beerT1P2.value,beerT2P1.value,beerT2P2.value,beerWin.value]) await ensurePlayer(n);post('/api/beer',{team1:[beerT1P1.value,beerT1P2.value],team2:[beerT2P1.value,beerT2P2.value],winner:beerWin.value});}
 async function addPacal(){for(const n of [pacalP1.value,pacalP2.value,pacalWin.value]) await ensurePlayer(n);post('/api/pacal',{p1:pacalP1.value,p2:pacalP2.value,winner:pacalWin.value});}
 async function addBingo(){for(const n of [bingo1.value,bingo2.value,bingo3.value]) await ensurePlayer(n);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});}
+ main
 function addAttraction(){post('/api/attraction',{time:attrTime.value,name:attrName.value});}
 function resetAll(){post('/api/reset',{});}
 const playersElem=document.getElementById('players');
+const playersBlueElem=document.getElementById('playersBlue');
+const playersYellowElem=document.getElementById('playersYellow');
 loadPlayers();
+loadTeams();
 function loadScore(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const ul=document.getElementById('scoreBoard');
