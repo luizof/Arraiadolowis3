@@ -108,36 +108,6 @@ function addBeer(){
 function addPacal(){[pacalP1.value,pacalP2.value,pacalWin.value].forEach(ensurePlayer);post('/api/pacal',{p1:pacalP1.value,p2:pacalP2.value,winner:pacalWin.value});}
 function addBingo(){[bingo1.value,bingo2.value,bingo3.value].forEach(ensurePlayer);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});}
 
-function updateDatalist(){playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}
-function askTeam(name){
-  return new Promise(resolve=>{
-    const overlay=document.createElement('div');
-    Object.assign(overlay.style,{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center'});
-    overlay.innerHTML=`<div style="background:white;padding:20px;text-align:center;">
-        <p>Selecione o time para ${name}</p>
-        <button id="chooseBlue">Azul</button>
-        <button id="chooseYellow">Amarelo</button>
-      </div>`;
-    document.body.appendChild(overlay);
-    overlay.querySelector('#chooseBlue').onclick=()=>{done('blue');};
-    overlay.querySelector('#chooseYellow').onclick=()=>{done('yellow');};
-    function done(team){document.body.removeChild(overlay);resolve(team);}
-  });
-}
-async function ensurePlayer(name){
-  if(!name||players[name])return;
-  const team=await askTeam(name);
-  if(team){post('/api/player',{name,team});players[name]=team;updateDatalist();}
-}
-function saveTeams(){post('/api/config/teamNames',{blue:teamBlue.value,yellow:teamYellow.value});}
-function addPlayer(){post('/api/player',{name:playerName.value,team:playerTeam.value});players[playerName.value]=playerTeam.value;updateDatalist();}
-async function addBull(){await ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});}
-async function addCotton(){for(const n of [cottonP1.value,cottonP2.value,cottonWin.value]) await ensurePlayer(n);post('/api/cotton',{p1:cottonP1.value,p2:cottonP2.value,winner:cottonWin.value});}
-async function addBeer(){for(const n of [beerT1P1.value,beerT1P2.value,beerT2P1.value,beerT2P2.value,beerWin.value]) await ensurePlayer(n);post('/api/beer',{team1:[beerT1P1.value,beerT1P2.value],team2:[beerT2P1.value,beerT2P2.value],winner:beerWin.value});}
-async function addPacal(){for(const n of [pacalP1.value,pacalP2.value,pacalWin.value]) await ensurePlayer(n);post('/api/pacal',{p1:pacalP1.value,p2:pacalP2.value,winner:pacalWin.value});}
-async function addBingo(){for(const n of [bingo1.value,bingo2.value,bingo3.value]) await ensurePlayer(n);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});}
-function addAttraction(){post('/api/attraction',{time:attrTime.value,name:attrName.value});}
-function resetAll(){post('/api/reset',{});}
 const playersElem=document.getElementById('players');
 const playersBlueElem=document.getElementById('playersBlue');
 const playersYellowElem=document.getElementById('playersYellow');
