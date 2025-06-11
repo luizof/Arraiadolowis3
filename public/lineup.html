@@ -19,7 +19,7 @@ th,td{border:1px solid #ccc;padding:4px;text-align:left;}
 </table>
 <h3>Adicionar nova atração</h3>
 <label>Nome <input id="newName"></label>
-<label>Horário (YYYY-MM-DDTHH:MM:SS) <input id="newTime"></label>
+<label>Horário <input id="newTime" type="datetime-local"></label>
 <button id="addBtn">Adicionar</button>
 <script>
 async function load(){
@@ -31,7 +31,7 @@ async function load(){
     const tr=document.createElement('tr');
     tr.dataset.index=idx;
     tr.innerHTML=`<td><input data-field="name" value="${a.name}" disabled></td>`+
-      `<td><input data-field="time" value="${a.time}" disabled></td>`+
+      `<td><input data-field="time" type="datetime-local" value="${new Date(a.time).toISOString().slice(0,16)}" disabled></td>`+
       `<td><button data-action="edit">Editar</button>`+
       `<button data-action="save" style="display:none">Salvar</button>`+
       `<button data-action="delete">Excluir</button></td>`;
