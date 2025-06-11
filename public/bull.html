@@ -75,8 +75,7 @@ function confirmFinish(){
 function newCompetition(){post('/api/bull/new',{});newBtn.style.display='none';finishBtn.style.display='inline';}
 function loadState(){fetch('/api/state').then(r=>r.json()).then(s=>{if(s.bullFinished){finishBtn.style.display='none';newBtn.style.display='inline';}});}
 loadPlayers();
-loadState();
- main
+  loadState();
 </script>
 </body>
 </html>
