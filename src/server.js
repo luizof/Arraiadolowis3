@@ -110,7 +110,6 @@ app.post('/api/bull', (req,res)=>{
   res.end();
 });
 
- codex/adicionar-histórico-de-registros-editável
 app.put('/api/bull/:index', (req,res)=>{
   const idx = parseInt(req.params.index,10);
   if(Number.isNaN(idx) || !data.bullTimes[idx]) return res.status(404).end();
@@ -123,6 +122,8 @@ app.delete('/api/bull/:index', (req,res)=>{
   const idx = parseInt(req.params.index,10);
   if(Number.isNaN(idx) || !data.bullTimes[idx]) return res.status(404).end();
   data.bullTimes.splice(idx,1);
+  res.end();
+});
 
 app.post('/api/bull/finish', (req,res)=>{
   data.bullFinished = true;
@@ -132,7 +133,6 @@ app.post('/api/bull/finish', (req,res)=>{
 app.post('/api/bull/new', (req,res)=>{
   data.bullTimes = [];
   data.bullFinished = false;
-main
   res.end();
 });
 

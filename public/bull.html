@@ -44,7 +44,6 @@ async function ensurePlayer(name){
 }
 async function addBull(){await ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});bullPlayer.value='';bullTime.value='';}
 const playersElem=document.getElementById('players');
- codex/adicionar-histórico-de-registros-editável
 function loadHistory(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const rows=s.bullTimes.map((b,i)=>`<tr>

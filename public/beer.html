@@ -16,7 +16,6 @@ label{display:block;margin-top:10px;}
 <label>Jogador2 (Time Amarelo) <input id="beerYellowP2" list="playersYellow"></label>
 <label>Vencedor <select id="beerWin"></select></label>
 <button onclick="addBeer()">Registrar</button>
-codex/adicionar-histórico-de-registros-editável
 <datalist id="players"></datalist>
 <h2>Histórico</h2>
 <table id="hist"></table>
@@ -64,7 +63,6 @@ async function ensurePlayer(name){
 }
 async function addBeer(){for(const n of [beerT1P1.value,beerT1P2.value,beerT2P1.value,beerT2P2.value,beerWin.value]) await ensurePlayer(n);post('/api/beer',{team1:[beerT1P1.value,beerT1P2.value],team2:[beerT2P1.value,beerT2P2.value],winner:beerWin.value});beerT1P1.value='';beerT1P2.value='';beerT2P1.value='';beerT2P2.value='';beerWin.value='';}
 const playersElem=document.getElementById('players');
-codex/adicionar-histórico-de-registros-editável
 function loadHistory(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const rows=s.beerPongs.map((b,i)=>`<tr>
