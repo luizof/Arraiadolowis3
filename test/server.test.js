@@ -15,7 +15,6 @@ describe('Express API', () => {
     expect(res.body.players.Alice).toBe('blue');
   });
 
-codex/implementar-página-lineup
   it('manages attractions', async () => {
     await request(app)
       .post('/api/attraction')
@@ -42,6 +41,7 @@ codex/implementar-página-lineup
       .expect(200);
 
     expect(empty.body).toEqual([]);
+  });
 
   it('updates points configuration', async () => {
     await request(app)
@@ -54,6 +54,5 @@ codex/implementar-página-lineup
       .expect(200);
 
     expect(res.body.points.bullFirst).toBe(99);
-main
   });
 });
