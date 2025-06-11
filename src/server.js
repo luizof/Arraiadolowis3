@@ -53,6 +53,10 @@ app.get('/api/state', (req,res)=>{
   res.json(data);
 });
 
+app.get('/api/players', (req,res)=>{
+  res.json(data.players);
+});
+
 app.post('/api/player', (req,res)=>{
   const {name, team} = req.body;
   if(!name || !team) return res.status(400).end();
