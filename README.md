@@ -37,4 +37,4 @@ The provided Dockerfile uses the official `node:20` image as its base. You can s
 docker run -p 3000:3000 arraia
 ```
 
-Then access `http://localhost:3000/` for slides, `http://localhost:3000/admin.html` for the admin panel and `http://localhost:3000/pontos.html` to configure scoring.
+

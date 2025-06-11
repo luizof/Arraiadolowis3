@@ -72,6 +72,24 @@ app.post('/api/player', (req,res)=>{
   res.end();
 });
 
+app.put('/api/player/:name', (req,res)=>{
+  const oldName = req.params.name;
+  if(!data.players[oldName]) return res.status(404).end();
+  const {name = oldName, team} = req.body;
+  if(name !== oldName){
+    data.players[name] = data.players[oldName];
+    delete data.players[oldName];
+  }
+  if(team) data.players[name] = team;
+  res.end();
+});
+
+app.delete('/api/player/:name', (req,res)=>{
+  const name = req.params.name;
+  delete data.players[name];
+  res.end();
+});
+
 app.post('/api/bull', (req,res)=>{
   const {name,time} = req.body;
   data.bullTimes.push({name,time:parseFloat(time)});
