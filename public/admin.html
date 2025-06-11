@@ -72,6 +72,11 @@ label{display:block;margin-top:10px;}
 </div>
 <hr>
 <button onclick="resetAll()">Zerar Tudo</button>
+<hr>
+<div>
+<h2>Placar</h2>
+<ul id="scoreBoard"></ul>
+</div>
 <datalist id="players"></datalist>
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
@@ -90,6 +95,15 @@ function addAttraction(){post('/api/attraction',{time:attrTime.value,name:attrNa
 function resetAll(){post('/api/reset',{});}
 const playersElem=document.getElementById('players');
 loadPlayers();
+function loadScore(){
+  fetch('/api/state').then(r=>r.json()).then(s=>{
+    const ul=document.getElementById('scoreBoard');
+    const entries=Object.entries(s.scores).sort((a,b)=>b[1]-a[1]);
+    ul.innerHTML=entries.map(([team,score],i)=>`<li>${s.teamNames[team]} - ${score}${i===0?' 🏆':''}</li>`).join('');
+  });
+}
+loadScore();
+setInterval(loadScore,5000);
 </script>
 </body>
 </html>
