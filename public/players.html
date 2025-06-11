@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Jogadores</title>
+<style>
+body{font-family:sans-serif;padding:20px;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #ccc;padding:5px;text-align:left;}
+button{margin-left:5px;}
+</style>
+</head>
+<body>
+<h1>Jogadores</h1>
+<table id="playersTable"></table>
+<h2>Adicionar Jogador</h2>
+<input id="newName" placeholder="Nome"/>
+<select id="newTeam"><option value="blue">Azul</option><option value="yellow">Amarelo</option></select>
+<button onclick="addPlayer()">Adicionar</button>
+<script>
+function fetchPlayers(){
+  fetch('/api/players').then(r=>r.json()).then(p=>{players=p;render();});
+}
+let players={};
+function render(){
+  const tbl=document.getElementById('playersTable');
+  tbl.innerHTML='<tr><th>Nome</th><th>Time</th><th>Ações</th></tr>'+
+    Object.entries(players).map(([name,team])=>{
+      return `<tr>
+        <td><input value="${name}" data-old="${name}" class="name"/></td>
+        <td>
+          <select class="team">
+            <option value="blue" ${team==='blue'?'selected':''}>Azul</option>
+            <option value="yellow" ${team==='yellow'?'selected':''}>Amarelo</option>
+          </select>
+        </td>
+        <td>
+          <button onclick="save(this)">Salvar</button>
+          <button onclick="removePlayer(this)">Excluir</button>
+        </td>
+      </tr>`;
+    }).join('');
+}
+function save(btn){
+  const tr=btn.closest('tr');
+  const oldName=tr.querySelector('.name').getAttribute('data-old');
+  const newName=tr.querySelector('.name').value;
+  const team=tr.querySelector('.team').value;
+  fetch('/api/player/'+encodeURIComponent(oldName),{
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:newName,team})
+  }).then(fetchPlayers);
+}
+function removePlayer(btn){
+  const tr=btn.closest('tr');
+  const name=tr.querySelector('.name').getAttribute('data-old');
+  fetch('/api/player/'+encodeURIComponent(name),{method:'DELETE'}).then(fetchPlayers);
+}
+function addPlayer(){
+  const name=document.getElementById('newName').value;
+  const team=document.getElementById('newTeam').value;
+  fetch('/api/player',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,team})}).then(()=>{document.getElementById('newName').value='';fetchPlayers();});
+}
+fetchPlayers();
+</script>
+</body>
+</html>

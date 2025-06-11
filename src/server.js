@@ -21,6 +21,9 @@ const data = {
   points: {
     bullFirst: 20,
     bullSecond: 10,
+    bullThird: 5,
+    bullFourth: 3,
+    bullFifth: 1,
     cottonWin: 3,
     beerWin: 3,
     pacalWin: 3,
@@ -33,10 +36,15 @@ const data = {
 
 function computeScores() {
   data.scores = {blue:0, yellow:0};
-  if (data.bullTimes.length >= 2) {
-    const sorted = [...data.bullTimes].sort((a,b)=>a.time-b.time).slice(0,2);
-    if(sorted[0]) data.scores[data.players[sorted[0].name]] += data.points.bullFirst;
-    if(sorted[1]) data.scores[data.players[sorted[1].name]] += data.points.bullSecond;
+  if (data.bullTimes.length > 0) {
+    const keys = ['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
+    const sorted = [...data.bullTimes].sort((a,b)=>a.time-b.time).slice(0, keys.length);
+    sorted.forEach((r,i)=>{
+      const k = keys[i];
+      if(r && data.points[k]) {
+        data.scores[data.players[r.name]] += data.points[k];
+      }
+    });
   }
   data.cottonWars.forEach(b=>{ data.scores[data.players[b.winner]] += data.points.cottonWin; });
   data.beerPongs.forEach(b=>{ data.scores[data.players[b.winner]] += data.points.beerWin; });
@@ -61,6 +69,24 @@ app.post('/api/player', (req,res)=>{
   const {name, team} = req.body;
   if(!name || !team) return res.status(400).end();
   data.players[name]=team;
+  res.end();
+});
+
+app.put('/api/player/:name', (req,res)=>{
+  const oldName = req.params.name;
+  if(!data.players[oldName]) return res.status(404).end();
+  const {name = oldName, team} = req.body;
+  if(name !== oldName){
+    data.players[name] = data.players[oldName];
+    delete data.players[oldName];
+  }
+  if(team) data.players[name] = team;
+  res.end();
+});
+
+app.delete('/api/player/:name', (req,res)=>{
+  const name = req.params.name;
+  delete data.players[name];
   res.end();
 });
 
@@ -121,6 +147,14 @@ app.delete('/api/attraction/:index', (req,res)=>{
 
 app.post('/api/config/teamNames', (req,res)=>{
   data.teamNames=req.body;
+  res.end();
+});
+
+app.post('/api/config/points', (req,res)=>{
+  Object.keys(req.body).forEach(k=>{
+    const v = parseFloat(req.body[k]);
+    if(!isNaN(v)) data.points[k]=v;
+  });
   res.end();
 });
 

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin</title>
+<style>
+body{font-family:sans-serif;}
+label{display:block;margin-top:10px;}
+</style>
+</head>
+<body>
+<h1>Admin</h1>
+<div>
+<label>Nome do time azul <input id="teamBlue"/></label>
+<label>Nome do time amarelo <input id="teamYellow"/></label>
+<button onclick="saveTeams()">Salvar</button>
+</div>
+<hr>
+<div>
+<h2>Cadastrar jogador</h2>
+<label>Nome <input id="playerName"/></label>
+<select id="playerTeam"><option value="blue">Azul</option><option value="yellow">Amarelo</option></select>
+<button onclick="addPlayer()">Adicionar</button>
+</div>
+<hr>
+<div>
+<h2>Touro Mecanico</h2>
+<label>Jogador <input id="bullPlayer" list="players"/></label>
+<label>Tempo <input id="bullTime" type="number"/></label>
+<button onclick="addBull()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Guerra de Cotonete</h2>
+<label>P1 <input id="cottonP1" list="players"/></label>
+<label>P2 <input id="cottonP2" list="players"/></label>
+<label>Vencedor <input id="cottonWin" list="players"/></label>
+<button onclick="addCotton()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Beer Pong</h2>
+<label>Time1 Jogador1 <input id="beerT1P1" list="players"/></label>
+<label>Time1 Jogador2 <input id="beerT1P2" list="players"/></label>
+<label>Time2 Jogador1 <input id="beerT2P1" list="players"/></label>
+<label>Time2 Jogador2 <input id="beerT2P2" list="players"/></label>
+<label>Vencedor <input id="beerWin" list="players"/></label>
+<button onclick="addBeer()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Pacal</h2>
+<label>P1 <input id="pacalP1" list="players"/></label>
+<label>P2 <input id="pacalP2" list="players"/></label>
+<label>Vencedor <input id="pacalWin" list="players"/></label>
+<button onclick="addPacal()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Bingo</h2>
+<label>1º <input id="bingo1" list="players"/></label>
+<label>2º <input id="bingo2" list="players"/></label>
+<label>3º <input id="bingo3" list="players"/></label>
+<button onclick="addBingo()">Registrar</button>
+</div>
+<hr>
+<div>
+<h2>Atração</h2>
+<label>Horario (YYYY-MM-DDTHH:MM:SS) <input id="attrTime"/></label>
+<label>Nome <input id="attrName"/></label>
+<button onclick="addAttraction()">Adicionar</button>
+</div>
+<hr>
+<button onclick="resetAll()">Zerar Tudo</button>
+<hr>
+<div>
+<h2>Placar</h2>
+<ul id="scoreBoard"></ul>
+</div>
+<datalist id="players"></datalist>
+<script>
+function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
+let players = {};
+function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;updateDatalist();});}
+function updateDatalist(){playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}
+function ensurePlayer(name){if(!name||players[name])return;const team=prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;updateDatalist();}}
+function saveTeams(){post('/api/config/teamNames',{blue:teamBlue.value,yellow:teamYellow.value});}
+function addPlayer(){post('/api/player',{name:playerName.value,team:playerTeam.value});players[playerName.value]=playerTeam.value;updateDatalist();}
+function addBull(){ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});}
+function addCotton(){[cottonP1.value,cottonP2.value,cottonWin.value].forEach(ensurePlayer);post('/api/cotton',{p1:cottonP1.value,p2:cottonP2.value,winner:cottonWin.value});}
+function addBeer(){[beerT1P1.value,beerT1P2.value,beerT2P1.value,beerT2P2.value,beerWin.value].forEach(ensurePlayer);post('/api/beer',{team1:[beerT1P1.value,beerT1P2.value],team2:[beerT2P1.value,beerT2P2.value],winner:beerWin.value});}
+function addPacal(){[pacalP1.value,pacalP2.value,pacalWin.value].forEach(ensurePlayer);post('/api/pacal',{p1:pacalP1.value,p2:pacalP2.value,winner:pacalWin.value});}
+function addBingo(){[bingo1.value,bingo2.value,bingo3.value].forEach(ensurePlayer);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});}
+function addAttraction(){post('/api/attraction',{time:attrTime.value,name:attrName.value});}
+function resetAll(){post('/api/reset',{});}
+const playersElem=document.getElementById('players');
+loadPlayers();
+function loadScore(){
+  fetch('/api/state').then(r=>r.json()).then(s=>{
+    const ul=document.getElementById('scoreBoard');
+    const entries=Object.entries(s.scores).sort((a,b)=>b[1]-a[1]);
+    ul.innerHTML=entries.map(([team,score],i)=>`<li>${s.teamNames[team]} - ${score}${i===0?' 🏆':''}</li>`).join('');
+  });
+}
+loadScore();
+setInterval(loadScore,5000);
+</script>
+</body>
+</html>
