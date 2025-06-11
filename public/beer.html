@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Beer Pong</title>
+<style>
+body{font-family:sans-serif;padding:20px;}
+label{display:block;margin-top:10px;}
+</style>
+</head>
+<body>
+<h1>Beer Pong</h1>
+<label>Time1 Jogador1 <input id="beerT1P1" list="players"></label>
+<label>Time1 Jogador2 <input id="beerT1P2" list="players"></label>
+<label>Time2 Jogador1 <input id="beerT2P1" list="players"></label>
+<label>Time2 Jogador2 <input id="beerT2P2" list="players"></label>
+<label>Vencedor <input id="beerWin" list="players"></label>
+<button onclick="addBeer()">Registrar</button>
+<datalist id="players"></datalist>
+<script>
+function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
+let players={};
+function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${n}">`).join('');});}
+function ensurePlayer(name){if(!name||players[name])return;const team=prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}}
+function addBeer(){[beerT1P1.value,beerT1P2.value,beerT2P1.value,beerT2P2.value,beerWin.value].forEach(ensurePlayer);post('/api/beer',{team1:[beerT1P1.value,beerT1P2.value],team2:[beerT2P1.value,beerT2P2.value],winner:beerWin.value});beerT1P1.value='';beerT1P2.value='';beerT2P1.value='';beerT2P2.value='';beerWin.value='';}
+const playersElem=document.getElementById('players');
+loadPlayers();
+</script>
+</body>
+</html>
