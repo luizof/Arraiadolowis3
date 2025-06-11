@@ -73,7 +73,10 @@ function render(){
     const next=state.attractions.find(a=> new Date(a.time)>now);
     let html='<h1>Atrações</h1>';
     if(current) html+=`<p>Agora: ${current.name}</p>`;
-    if(next){const diff=Math.floor((new Date(next.time)-now)/1000);html+=`<p>Em seguida: ${next.name} (em ${diff}s)</p>`;} 
+    if(next){
+      const diff=Math.ceil((new Date(next.time)-now)/60000);
+      html+=`<p>Em seguida: ${next.name} (em ${diff} min)</p>`;
+    }
     slides.push({color:'blue',image:bgImages.attractions,html});
   }
   const scoreEntries=Object.entries(state.scores).sort((a,b)=>b[1]-a[1]);
