@@ -2,12 +2,36 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin Menu</title>
 <style>
-body{font-family:sans-serif;display:flex;flex-wrap:wrap;gap:20px;padding:20px;}
-.menu-item{display:flex;flex-direction:column;justify-content:center;align-items:center;border:1px solid #ccc;border-radius:8px;width:120px;height:120px;text-decoration:none;color:black;background:#f0f0f0;}
+body{
+  font-family:sans-serif;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  justify-items:center;
+  gap:20px;
+  padding:20px;
+}
+.menu-item{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  border:1px solid #ccc;
+  border-radius:8px;
+  width:100%;
+  max-width:150px;
+  height:120px;
+  text-decoration:none;
+  color:black;
+  background:#f0f0f0;
+}
 .menu-item span.emoji{font-size:48px;}
 .menu-item span.label{margin-top:auto;padding-bottom:5px;font-size:14px;}
+@media(max-width:600px){
+  body{grid-template-columns:repeat(2,1fr);}
+}
 </style>
 </head>
 <body>
