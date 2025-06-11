@@ -30,7 +30,7 @@ describe('Express API', () => {
       .get('/api/attractions')
       .expect(200);
 
-    expect(list.body[0]).toEqual({ name: 'Show 2', time: '2023-01-01T11:00:00.000Z' });
+    expect(list.body[0]).toEqual({ name: 'Show 2', time: '2023-01-01T11:00' });
 
     await request(app)
       .delete('/api/attraction/0')
