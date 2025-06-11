@@ -10,6 +10,8 @@ This project provides a simple slide show and admin panel for a local party scor
 docker build -t arraia .
 ```
 
+The provided Dockerfile uses the official `node:20` image as its base. You can swap in a different tag if you need another Node version.
+
 ### Run
 
 ```bash
