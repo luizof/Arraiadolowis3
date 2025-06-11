@@ -13,6 +13,11 @@ body{
   gap:20px;
   padding:20px;
 }
+.header-img{
+  grid-column:1/-1;
+  justify-self:center;
+  max-width:200px;
+}
 .menu-item{
   display:flex;
   flex-direction:column;
@@ -35,6 +40,7 @@ body{
 </style>
 </head>
 <body>
+<img src="images/admin-header.png" alt="Admin" class="header-img"/>
 <a class="menu-item" href="players.html">
   <span class="emoji">👥</span>
   <span class="label">Jogadores</span>
