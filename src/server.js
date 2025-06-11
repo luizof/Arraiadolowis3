@@ -184,6 +184,10 @@ function startServer() {
   });
 
   const wss = new WebSocket.Server({ server });
+  wss.on('connection', ws => {
+    computeScores();
+    ws.send(JSON.stringify(data));
+  });
   function broadcast() {
     computeScores();
     const msg = JSON.stringify(data);

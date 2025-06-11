@@ -74,5 +74,6 @@ codex/update-computescores-to-handle-undefined-players
     expect(res.body.scores.blue).toBe(0);
     expect(res.body.scores.yellow).toBe(0);
     expect('undefined' in res.body.scores).toBe(false);
+main
   });
 });
