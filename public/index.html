@@ -9,6 +9,14 @@ body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color
 .active{display:block;}
 .team-blue{color:blue;}
 .team-yellow{color:gold;}
+/* Estilos para slide de atrações */
+.attractions-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;}
+.attractions-title{font-size:72px;}
+.attractions-now-label{font-size:48px;}
+.attractions-current{font-size:64px;}
+.attractions-next-label{font-size:48px;text-align:center;}
+.attractions-next{font-size:64px;}
+.clock{font-size:48px;}
 </style>
 </head>
 <body>
@@ -71,12 +79,18 @@ function render(){
     const now=new Date();
     const current=state.attractions.find(a=> new Date(a.time)<=now);
     const next=state.attractions.find(a=> new Date(a.time)>now);
-    let html='<h1>Atrações</h1>';
-    if(current) html+=`<p>Agora: ${current.name}</p>`;
+    let html='<div class="attractions-slide">';
+    html+='<div class="attractions-title">Atrações</div>';
+    if(current){
+      html+=`<div class="attractions-now-label">Agora:</div>`;
+      html+=`<div class="attractions-current">${current.name}</div>`;
+    }
     if(next){
       const diff=Math.ceil((new Date(next.time)-now)/60000);
-      html+=`<p>Em seguida: ${next.name} (em ${diff} min)</p>`;
+      html+=`<div class="attractions-next-label">Em seguida</div>`;
+      html+=`<div class="attractions-next">${next.name} <span class="clock">🕒 ${diff} min</span></div>`;
     }
+    html+='</div>';
     slides.push({color:'blue',image:bgImages.attractions,html});
   }
   const scoreEntries=Object.entries(state.scores).sort((a,b)=>b[1]-a[1]);
