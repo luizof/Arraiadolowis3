@@ -17,6 +17,11 @@ body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color
 .attractions-next-label{font-size:48px;text-align:center;}
 .attractions-next{font-size:64px;}
 .clock{font-size:48px;}
+/* Estilos para slide de bingo */
+.bingo-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;}
+.bingo-title{font-size:72px;}
+.bingo-table{margin:0 auto;border-collapse:collapse;width:100%;}
+.bingo-table td{font-size:64px;padding:10px;}
 </style>
 </head>
 <body>
@@ -56,11 +61,19 @@ function render(){
     slides.push({color:'green',image:bgImages.cotton,html});
   }
   if(state.bingoWinners){
-    let html='<h1>Bingo</h1><ol>';
-    html+=`<li><span class="team-${state.players[state.bingoWinners.first]}">${state.bingoWinners.first}</span> 🏆</li>`;
-    html+=`<li><span class="team-${state.players[state.bingoWinners.second]}">${state.bingoWinners.second}</span></li>`;
-    html+=`<li><span class="team-${state.players[state.bingoWinners.third]}">${state.bingoWinners.third}</span></li>`;
-    html+='</ol>';
+    let html='<div class="bingo-slide">';
+    html+='<div class="bingo-title">Bingo</div>';
+    html+='<table class="bingo-table">';
+    const rows=[
+      {name:state.bingoWinners.first,key:'bingoFirst',trophy:'🏆',pos:'1º'},
+      {name:state.bingoWinners.second,key:'bingoSecond',pos:'2º'},
+      {name:state.bingoWinners.third,key:'bingoThird',pos:'3º'}
+    ];
+    rows.forEach(r=>{
+      const pts=state.points[r.key]||0;
+      html+=`<tr><td>${r.pos}</td><td><span class="team-${state.players[r.name]}">${r.name||''}</span> (${pts} pts) ${r.trophy||''}</td></tr>`;
+    });
+    html+='</table></div>';
     slides.push({color:'purple',image:bgImages.bingo,html});
   }
   if(state.beerPongs.length>0){
