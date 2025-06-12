@@ -10,7 +10,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-const DATA_FILE = process.env.DATA_FILE || path.join(__dirname, '..', 'data.json');
+const DATA_FILE = process.env.DATA_FILE || path.join(process.env.DATA_DIR || path.join(__dirname, '..', 'data'), 'data.json');
 
 const defaultData = {
   players: {}, // name -> team
@@ -53,6 +53,10 @@ function loadData(){
 
 function saveData(){
   try{
+    const dir = path.dirname(DATA_FILE);
+    if(!fs.existsSync(dir)){
+      fs.mkdirSync(dir, { recursive: true });
+    }
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
   }catch(e){
     console.error('Failed to save data file:', e);

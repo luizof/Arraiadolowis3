@@ -42,7 +42,8 @@ The provided Dockerfile uses the official `node:20` image as its base. You can s
 ### Run
 
 ```bash
-docker run -p 3000:3000 arraia
+# persist data in /path/on/host
+docker run -p 3000:3000 -v /path/on/host:/app/data arraia
 ```
 
 Then access `http://localhost:3000/` for slides,
@@ -60,10 +61,16 @@ Then access `http://localhost:3000/` for slides,
 
 ### Data persistence
 
-All scoreboard information is automatically saved to a `data.json` file in the
-project root. The server loads this file on startup and writes changes back to
-it whenever data is modified, so results persist across restarts. If the file
-does not exist it will be created the first time the server runs.
+All scoreboard information is automatically saved to a `data.json` file inside
+the `data` directory. Set the `DATA_DIR` environment variable to point
+elsewhere if desired. When using Docker, mount a host folder at
+`/app/data` so the file is preserved across container restarts:
+
+```bash
+docker run -p 3000:3000 -v /path/on/host:/app/data arraia
+```
+
+If the file does not exist it will be created the first time the server runs.
 
 ### Background images
 
