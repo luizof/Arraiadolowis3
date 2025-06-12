@@ -83,7 +83,9 @@ function render(){
     let html='<div class="cotton-slide"><h1>Guerra de Cotonete</h1><div class="cotton-wrapper">';
     recent.forEach(b=>{
       const time=b.time?new Date(b.time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
-      html+=`<div class="cotton-row"><span><span class="team-${state.players[b.p1]}">${b.p1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}</span> 🏆 <span class="team-${state.players[b.winner]}">${b.winner}</span> (+${pts})</span><span class="cotton-time">${time}</span></div>`;
+      const trophy1=b.winner===b.p1?'🏆':'';
+      const trophy2=b.winner===b.p2?'🏆':'';
+      html+=`<div class="cotton-row"><span><span class="team-${state.players[b.p1]}">${b.p1}${trophy1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}${trophy2}</span> (+${pts})</span><span class="cotton-time">${time}</span></div>`;
     });
     html+='</div></div>';
     slides.push({color:'green',image:bgImages.cotton,html});
