@@ -58,6 +58,13 @@ Then access `http://localhost:3000/` for slides,
 `http://localhost:3000/lineup.html` for the lineup editor,
 `http://localhost:3000/reset.html` to reset all data.
 
+### Data persistence
+
+All scoreboard information is automatically saved to a `data.json` file in the
+project root. The server loads this file on startup and writes changes back to
+it whenever data is modified, so results persist across restarts. If the file
+does not exist it will be created the first time the server runs.
+
 ### Background images
 
 Add your desired slide backgrounds in the `public/backgrounds` directory using the filenames listed above. When present, they will automatically be used in the slideshow.

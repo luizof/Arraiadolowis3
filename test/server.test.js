@@ -1,5 +1,21 @@
 const request = require('supertest');
+const fs = require('fs');
+const path = require('path');
+
+process.env.DATA_FILE = path.join(__dirname, 'test-data.json');
 const { app } = require('../src/server');
+
+beforeEach(() => {
+  if (fs.existsSync(process.env.DATA_FILE)) {
+    fs.unlinkSync(process.env.DATA_FILE);
+  }
+});
+
+afterAll(() => {
+  if (fs.existsSync(process.env.DATA_FILE)) {
+    fs.unlinkSync(process.env.DATA_FILE);
+  }
+});
 
 describe('Express API', () => {
   it('registers a player and returns state', async () => {
