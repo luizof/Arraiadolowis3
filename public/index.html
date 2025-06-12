@@ -17,6 +17,11 @@ body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color
 .attractions-next-label{font-size:48px;text-align:center;}
 .attractions-next{font-size:64px;}
 .clock{font-size:48px;}
+/* Estilos para slide Top Touro */
+.bull-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;}
+.bull-title{font-size:72px;}
+.bull-table{margin:auto;font-size:64px;border-collapse:collapse;}
+.bull-table td{padding:10px 20px;}
 </style>
 </head>
 <body>
@@ -38,16 +43,26 @@ function render(){
   const slides=[];
     if(state.bullTimes.length>0){
       const keys=['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
-      const sorted=[...state.bullTimes].sort((a,b)=>a.time-b.time).slice(0,keys.length);
-      let html='<h1>Top Touro</h1><ol>';let i=0;
-      sorted.forEach(r=>{
-        const k=keys[i];
-        const pts=state.points[k]||0;
-        html+=`<li><span class="team-${state.players[r.name]}">${r.name}</span> - ${r.time}s (${pts} pts) ${i==0?'🏆':''}</li>`;
-        i++;
-      });
-      html+='</ol>';
-    slides.push({color:'darkred',image:bgImages.bull,html});
+      const sorted=[...state.bullTimes].sort((a,b)=>a.time-b.time).slice(0,10);
+      let html='<div class="bull-slide">';
+      html+='<div class="bull-title">Top Touro</div>';
+      html+='<table class="bull-table">';
+      for(let row=0; row<5; row++){
+        html+='<tr>';
+        const left=sorted[row];
+        const right=sorted[row+5];
+        if(left){
+          const pts=row<keys.length?state.points[keys[row]]||0:0;
+          html+=`<td>${row+1}. <span class="team-${state.players[left.name]}">${left.name}</span> - ${left.time}s${row<keys.length?` (${pts} pts)`:''} ${row==0?'🏆':''}</td>`;
+        }else{html+='<td></td>';}
+        if(right){
+          const idx=row+5;
+          html+=`<td>${idx+1}. <span class="team-${state.players[right.name]}">${right.name}</span> - ${right.time}s</td>`;
+        }else{html+='<td></td>';}
+        html+='</tr>';
+      }
+      html+='</table></div>';
+      slides.push({color:'darkred',image:bgImages.bull,html});
     }
   if(state.cottonWars.length>0){
     let html='<h1>Guerra de Cotonete</h1><ul>';
