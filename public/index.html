@@ -68,7 +68,7 @@ function render(){
       const keys=['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
       const sorted=[...state.bullTimes].sort((a,b)=>a.time-b.time).slice(0,10);
       let html='<div class="bull-slide">';
-      html+='<div class="bull-title">Top Touro</div>';
+      html+='<div class="bull-title">Top Touro 🐂</div>';
       html+='<table class="bull-table">';
       for(let row=0; row<5; row++){
         html+='<tr>';
@@ -90,7 +90,7 @@ function render(){
   if(state.cottonWars.length>0){
     const pts = state.points.cottonWin || 0;
     const recent = state.cottonWars.slice().reverse();
-    let html='<div class="cotton-slide"><h1>Guerra de Cotonete</h1><div class="cotton-wrapper">';
+    let html='<div class="cotton-slide"><h1>Guerra de Cotonete ⚔️</h1><div class="cotton-wrapper">';
     recent.forEach(b=>{
       const time=b.time?new Date(b.time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
       const trophy1=b.winner===b.p1?'🏆':'';
@@ -119,7 +119,7 @@ function render(){
   }
   if(state.beerPongs.length>0){
     let html='<div class="beer-slide">';
-    html+='<div class="beer-title">🍺 Beer Pong</div>';
+    html+='<div class="beer-title">🍺 Beer Pong 🍺</div>';
     html+='<table class="beer-table">';
     state.beerPongs.slice(-5).forEach(b=>{
       html+=`<tr><td><span class="team-${state.players[b.team1[0]]}">${b.team1[0]}</span></td><td><span class="team-${state.players[b.team2[0]]}">${b.team2[0]}</span></td><td rowspan="2">🏆 <span class="team-${b.winner}">${state.teamNames[b.winner]}</span></td></tr>`;
@@ -129,7 +129,7 @@ function render(){
     slides.push({color:'orange',image:bgImages.beer,html});
   }
   if(state.pacalWars.length>0){
-    let html='<h1>Pacal</h1><ul>';
+    let html='<h1>Pacal 🎯</h1><ul>';
     state.pacalWars.slice(-5).forEach(b=>{html+=`<li><span class="team-${state.players[b.p1]}">${b.p1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}</span> 🏆 <span class="team-${state.players[b.winner]}">${b.winner}</span></li>`});
     html+='</ul>';
     slides.push({color:'brown',image:bgImages.pacal,html});
@@ -139,7 +139,7 @@ function render(){
     const current=state.attractions.find(a=> new Date(a.time)<=now);
     const next=state.attractions.find(a=> new Date(a.time)>now);
     let html='<div class="attractions-slide">';
-    html+='<div class="attractions-title">Atrações</div>';
+    html+='<div class="attractions-title">Atrações 🎪</div>';
     if(current){
       html+=`<div class="attractions-now-label">Agora:</div>`;
       html+=`<div class="attractions-current">${current.name}</div>`;
@@ -153,7 +153,7 @@ function render(){
     slides.push({color:'blue',image:bgImages.attractions,html});
   }
   const scoreEntries=Object.entries(state.scores).sort((a,b)=>b[1]-a[1]);
-  let html='<h1>Placar</h1><ul>';
+  let html='<h1>Placar 🏆</h1><ul>';
   scoreEntries.forEach(([team,score],i)=>{html+=`<li>${state.teamNames[team]} - ${score} ${i==0?'🏆':''}</li>`});
   html+='</ul>';
   slides.push({color:'black',image:bgImages.score,html});
