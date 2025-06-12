@@ -20,9 +20,9 @@ body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color
 /* Estilos para slide de guerra de cotonete */
 .cotton-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;}
 .cotton-slide h1{font-size:72px;margin-top:0;}
-.cotton-row{font-size:48px;display:flex;justify-content:space-between;padding:5px 20px;}
+.cotton-row{font-size:48px;display:flex;align-items:baseline;padding:5px 20px;}
 .cotton-wrapper{column-count:2;text-align:left;}
-.cotton-time{text-align:right;margin-left:20px;}
+.cotton-time{font-size:0.7em;margin-left:8px;}
 /* Estilos para slide de bingo */
 .bingo-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;}
 .bingo-title{font-size:72px;}
@@ -95,7 +95,7 @@ function render(){
       const time=b.time?new Date(b.time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
       const trophy1=b.winner===b.p1?'🏆':'';
       const trophy2=b.winner===b.p2?'🏆':'';
-      html+=`<div class="cotton-row"><span><span class="team-${state.players[b.p1]}">${b.p1}${trophy1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}${trophy2}</span> (+${pts})</span><span class="cotton-time">${time}</span></div>`;
+      html+=`<div class="cotton-row"><span class="team-${state.players[b.p1]}">${b.p1}${trophy1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}${trophy2}</span> (+${pts}) <span class="cotton-time">${time}</span></div>`;
     });
     html+='</div></div>';
     slides.push({color:'green',image:bgImages.cotton,html});
