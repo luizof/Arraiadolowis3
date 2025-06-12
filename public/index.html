@@ -28,6 +28,8 @@ body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color
 .bingo-title{font-size:72px;}
 .bingo-table{margin:0 auto;border-collapse:collapse;width:100%;}
 .bingo-table td{font-size:64px;padding:10px;}
+.bingo-table .first-place td{font-size:192px;}
+.bingo-table .second-place td{font-size:128px;}
 
 /* Estilos para slide Top Touro */
 .bull-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;}
@@ -98,16 +100,17 @@ function render(){
   }
   if(state.bingoWinners){
     let html='<div class="bingo-slide">';
-    html+='<div class="bingo-title">Bingo</div>';
+    html+='<div class="bingo-title">Bingo 🎉</div>';
     html+='<table class="bingo-table">';
     const rows=[
       {name:state.bingoWinners.first,key:'bingoFirst',trophy:'🏆',pos:'1º'},
       {name:state.bingoWinners.second,key:'bingoSecond',pos:'2º'},
       {name:state.bingoWinners.third,key:'bingoThird',pos:'3º'}
     ];
-    rows.forEach(r=>{
+    rows.forEach((r,i)=>{
       const pts=state.points[r.key]||0;
-      html+=`<tr><td>${r.pos}</td><td><span class="team-${state.players[r.name]}">${r.name||''}</span> (${pts} pts) ${r.trophy||''}</td></tr>`;
+      const cls=i===0?'first-place':i===1?'second-place':'';
+      html+=`<tr class="${cls}"><td>${r.pos} <span class="team-${state.players[r.name]}">${r.name||''}</span> (${pts} pts) ${r.trophy||''}</td></tr>`;
     });
     html+='</table></div>';
     slides.push({color:'purple',image:bgImages.bingo,html});
