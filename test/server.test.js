@@ -104,4 +104,36 @@ describe('Express API', () => {
     res = await request(app).get('/api/state').expect(200);
     expect(res.body.scores.blue).toBe(res.body.points.bullFirst);
   });
+
+  it('rejects cotton wars between players of the same team', async () => {
+    await request(app).post('/api/player').send({ name: 'Alice', team: 'blue' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'Bob', team: 'blue' }).expect(200);
+
+    await request(app)
+      .post('/api/cotton')
+      .send({ p1: 'Alice', p2: 'Bob', winner: 'Alice' })
+      .expect(400);
+  });
+
+  it('rejects beer pong matches between the same team', async () => {
+    await request(app).post('/api/player').send({ name: 'A1', team: 'blue' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'A2', team: 'blue' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'B1', team: 'blue' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'B2', team: 'blue' }).expect(200);
+
+    await request(app)
+      .post('/api/beer')
+      .send({ team1: ['A1','A2'], team2: ['B1','B2'], winner: 'blue' })
+      .expect(400);
+  });
+
+  it('rejects pacal duels between players of the same team', async () => {
+    await request(app).post('/api/player').send({ name: 'P1', team: 'yellow' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'P2', team: 'yellow' }).expect(200);
+
+    await request(app)
+      .post('/api/pacal')
+      .send({ p1: 'P1', p2: 'P2', winner: 'P1' })
+      .expect(400);
+  });
 });
