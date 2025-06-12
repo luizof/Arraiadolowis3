@@ -48,6 +48,7 @@ body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color
 <script>
 const slidesEl=document.getElementById('slides');
 let state={};
+let timer;
 const bgImages={
   bull:'backgrounds/bull.jpg',
   cotton:'backgrounds/cotton.jpg',
@@ -58,6 +59,7 @@ const bgImages={
   score:'backgrounds/score.jpg'
 };
 function render(){
+  clearTimeout(timer);
   slidesEl.innerHTML='';
   const slides=[];
     if(state.bullTimes.length>0){
@@ -166,7 +168,11 @@ function render(){
     slidesEl.querySelectorAll('.slide').forEach((el,i)=>{el.classList.toggle('active',i===idx);});
     idx=(idx+1)%slidesEl.children.length;
   }
-  if(slidesEl.children.length>0){show();setInterval(show,5000);}
+  function schedule(){
+    timer=setTimeout(()=>{show();schedule();},10000);
+  }
+  slidesEl.onclick=()=>{if(slidesEl.children.length){clearTimeout(timer);show();schedule();}};
+  if(slidesEl.children.length>0){show();schedule();}
 }
 
 const ws=new WebSocket(`ws://${location.host}`);
