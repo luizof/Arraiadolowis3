@@ -171,8 +171,13 @@ app.post('/api/bull/new', (req,res)=>{
 });
 
 app.post('/api/cotton', (req,res)=>{
-  const {p1,p2,winner} = req.body;
-  data.cottonWars.push({p1,p2,winner});
+  const {p1,p2,winner,time} = req.body;
+  data.cottonWars.push({
+    p1,
+    p2,
+    winner,
+    time: time || new Date().toISOString()
+  });
   saveData();
   res.end();
 });
@@ -180,8 +185,14 @@ app.post('/api/cotton', (req,res)=>{
 app.put('/api/cotton/:index', (req,res)=>{
   const idx = parseInt(req.params.index,10);
   if(Number.isNaN(idx) || !data.cottonWars[idx]) return res.status(404).end();
-  const {p1,p2,winner} = req.body;
-  data.cottonWars[idx] = {p1,p2,winner};
+  const {p1,p2,winner,time} = req.body;
+  const existing = data.cottonWars[idx];
+  data.cottonWars[idx] = {
+    p1,
+    p2,
+    winner,
+    time: time || existing.time || new Date().toISOString()
+  };
   saveData();
   res.end();
 });

@@ -17,6 +17,12 @@ body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color
 .attractions-next-label{font-size:48px;text-align:center;}
 .attractions-next{font-size:64px;}
 .clock{font-size:48px;}
+/* Estilos para slide de guerra de cotonete */
+.cotton-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;}
+.cotton-slide h1{font-size:72px;margin-top:0;}
+.cotton-row{font-size:48px;display:flex;justify-content:space-between;padding:5px 20px;}
+.cotton-wrapper{column-count:2;text-align:left;}
+.cotton-time{text-align:right;margin-left:20px;}
 </style>
 </head>
 <body>
@@ -50,9 +56,14 @@ function render(){
     slides.push({color:'darkred',image:bgImages.bull,html});
     }
   if(state.cottonWars.length>0){
-    let html='<h1>Guerra de Cotonete</h1><ul>';
-    state.cottonWars.slice(-5).forEach(b=>{html+=`<li><span class="team-${state.players[b.p1]}">${b.p1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}</span> 🏆 <span class="team-${state.players[b.winner]}">${b.winner}</span></li>`});
-    html+='</ul>';
+    const pts = state.points.cottonWin || 0;
+    const recent = state.cottonWars.slice().reverse();
+    let html='<div class="cotton-slide"><h1>Guerra de Cotonete</h1><div class="cotton-wrapper">';
+    recent.forEach(b=>{
+      const time=b.time?new Date(b.time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
+      html+=`<div class="cotton-row"><span><span class="team-${state.players[b.p1]}">${b.p1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}</span> 🏆 <span class="team-${state.players[b.winner]}">${b.winner}</span> (+${pts})</span><span class="cotton-time">${time}</span></div>`;
+    });
+    html+='</div></div>';
     slides.push({color:'green',image:bgImages.cotton,html});
   }
   if(state.bingoWinners){
