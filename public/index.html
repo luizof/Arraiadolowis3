@@ -35,6 +35,12 @@ body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color
 .bull-table{margin:auto;font-size:64px;border-collapse:collapse;}
 .bull-table td{padding:10px 20px;text-align:left;}
 
+/* Estilos para slide de Beer Pong */
+.beer-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;}
+.beer-title{font-size:96px;}
+.beer-table{margin:auto;font-size:64px;border-collapse:collapse;}
+.beer-table td{padding:10px 20px;}
+
 </style>
 </head>
 <body>
@@ -107,9 +113,14 @@ function render(){
     slides.push({color:'purple',image:bgImages.bingo,html});
   }
   if(state.beerPongs.length>0){
-    let html='<h1>Beer Pong</h1><ul>';
-    state.beerPongs.slice(-5).forEach(b=>{html+=`<li>${b.team1.map(p=>`<span class="team-${state.players[p]}">${p}</span>`).join(' & ')} vs ${b.team2.map(p=>`<span class="team-${state.players[p]}">${p}</span>`).join(' & ')} 🏆 <span class="team-${b.winner}">${state.teamNames[b.winner]}</span></li>`});
-    html+='</ul>';
+    let html='<div class="beer-slide">';
+    html+='<div class="beer-title">🍺 Beer Pong</div>';
+    html+='<table class="beer-table">';
+    state.beerPongs.slice(-5).forEach(b=>{
+      html+=`<tr><td><span class="team-${state.players[b.team1[0]]}">${b.team1[0]}</span></td><td><span class="team-${state.players[b.team2[0]]}">${b.team2[0]}</span></td><td rowspan="2">🏆 <span class="team-${b.winner}">${state.teamNames[b.winner]}</span></td></tr>`;
+      html+=`<tr><td><span class="team-${state.players[b.team1[1]]}">${b.team1[1]}</span></td><td><span class="team-${state.players[b.team2[1]]}">${b.team2[1]}</span></td></tr>`;
+    });
+    html+='</table></div>';
     slides.push({color:'orange',image:bgImages.beer,html});
   }
   if(state.pacalWars.length>0){
