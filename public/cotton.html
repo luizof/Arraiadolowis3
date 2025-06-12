@@ -13,7 +13,6 @@ label{display:block;margin-top:10px;}
 <label>P1 <input id="cottonP1" list="players"></label>
 <label>P2 <input id="cottonP2" list="players"></label>
 <label>Vencedor <input id="cottonWin" list="players"></label>
-<label>Horário <input id="cottonTime" type="datetime-local"></label>
 <button onclick="addCotton()">Registrar</button>
 <datalist id="players"></datalist>
 <h2>Histórico</h2>
@@ -44,19 +43,19 @@ async function ensurePlayer(name){
 }
 async function addCotton(){
   for(const n of [cottonP1.value,cottonP2.value,cottonWin.value]) await ensurePlayer(n);
-  post('/api/cotton',{p1:cottonP1.value,p2:cottonP2.value,winner:cottonWin.value,time:cottonTime.value});
-  cottonP1.value='';cottonP2.value='';cottonWin.value='';cottonTime.value='';
+  post('/api/cotton',{p1:cottonP1.value,p2:cottonP2.value,winner:cottonWin.value});
+  cottonP1.value='';cottonP2.value='';cottonWin.value='';
 }
 const playersElem=document.getElementById('players');
 function loadHistory(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const rows=s.cottonWars.map((c,i)=>{
-      const t=c.time?new Date(c.time).toISOString().slice(0,16):'';
+      const t=c.time?new Date(c.time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
       return `<tr>
       <td><input data-i="${i}" class="p1" value="${c.p1}" list="players"></td>
       <td><input data-i="${i}" class="p2" value="${c.p2}" list="players"></td>
       <td><input data-i="${i}" class="win" value="${c.winner}" list="players"></td>
-      <td><input data-i="${i}" class="time" type="datetime-local" value="${t}"></td>
+      <td>${t}</td>
       <td><button onclick="save(${i})">Salvar</button><button onclick="del(${i})">Excluir</button></td>
     </tr>`}).join('');
     document.getElementById('hist').innerHTML=`<tbody>${rows}</tbody>`;
@@ -66,9 +65,8 @@ function save(i){
   const p1=document.querySelector(`input.p1[data-i="${i}"]`).value;
   const p2=document.querySelector(`input.p2[data-i="${i}"]`).value;
   const winner=document.querySelector(`input.win[data-i="${i}"]`).value;
-  const time=document.querySelector(`input.time[data-i="${i}"]`).value;
   [p1,p2,winner].forEach(ensurePlayer);
-  fetch('/api/cotton/'+i,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({p1,p2,winner,time})}).then(loadHistory);
+  fetch('/api/cotton/'+i,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({p1,p2,winner})}).then(loadHistory);
 }
 function del(i){
   fetch('/api/cotton/'+i,{method:'DELETE'}).then(loadHistory);
