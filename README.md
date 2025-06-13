@@ -39,6 +39,18 @@ docker build -t arraia .
 
 The provided Dockerfile uses the official `node:20` image as its base. You can swap in a different tag if you need another Node version.
 
+### Build assets
+
+Front-end scripts live in `src/js`. Transpile them with Babel before running the
+server:
+
+```bash
+npm run build
+```
+
+This command writes compiled files to `public/js`. The Docker image executes it
+automatically during the build.
+
 ### Run
 
 ```bash
