@@ -10,9 +10,9 @@ function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) 
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
-if (!window.WebSocket || !document.querySelector) {
+if (!document.querySelector) {
   document.body.innerHTML = "<div style=\"padding:20px;font-family:sans-serif;text-align:center\">Seu navegador n\xE3o suporta os recursos necess\xE1rios para exibir esta p\xE1gina.</div>";
-  console.warn('Navegador sem suporte: WebSocket ou querySelector ausente');
+  console.warn('Navegador sem suporte: querySelector ausente');
 } else {
   var render = function render() {
     clearTimeout(timer);
@@ -206,9 +206,46 @@ if (!window.WebSocket || !document.querySelector) {
       schedule();
     }
   };
+  var updateAndRender = function updateAndRender(data) {
+    state = data;
+    render();
+  };
+  var fetchState = function fetchState() {
+    fetch('/api/state').then(function (r) {
+      return r.json();
+    }).then(updateAndRender)["catch"](function (err) {
+      return console.error('Polling failed', err);
+    });
+  };
+  var startPolling = function startPolling() {
+    clearInterval(pollTimer);
+    fetchState();
+    pollTimer = setInterval(fetchState, 5000);
+  };
+  var startWebSocket = function startWebSocket() {
+    if (!window.WebSocket) {
+      console.warn("WebSocket indispon\xEDvel, iniciando polling");
+      startPolling();
+      return;
+    }
+    var proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    var ws = new WebSocket("".concat(proto, "://").concat(location.host));
+    ws.onmessage = function (e) {
+      updateAndRender(JSON.parse(e.data));
+    };
+    ws.onerror = function () {
+      console.warn('WebSocket erro, alternando para polling');
+      startPolling();
+    };
+    ws.onclose = function () {
+      console.warn('WebSocket fechado, alternando para polling');
+      startPolling();
+    };
+  };
   var slidesEl = document.getElementById('slides');
   var state = {};
   var timer;
+  var pollTimer;
   var bgImages = {
     bull: 'backgrounds/bull.jpg',
     cotton: 'backgrounds/cotton.jpg',
@@ -218,9 +255,5 @@ if (!window.WebSocket || !document.querySelector) {
     attractions: 'backgrounds/attractions.jpg',
     score: 'backgrounds/score.jpg'
   };
-  var ws = new WebSocket("ws://".concat(location.host));
-  ws.onmessage = function (e) {
-    state = JSON.parse(e.data);
-    render();
-  };
+  startWebSocket();
 }
