@@ -136,4 +136,23 @@ describe('Express API', () => {
       .send({ p1: 'P1', p2: 'P2', winner: 'P1' })
       .expect(400);
   });
+
+  it('rejects invalid bull times', async () => {
+    await request(app).post('/api/player').send({ name: 'Alice', team: 'blue' }).expect(200);
+
+    await request(app)
+      .post('/api/bull')
+      .send({ name: 'Alice', time: 'Infinity' })
+      .expect(400);
+
+    await request(app)
+      .post('/api/bull')
+      .send({ name: 'Alice', time: '5' })
+      .expect(200);
+
+    await request(app)
+      .put('/api/bull/0')
+      .send({ name: 'Alice', time: 'NaN' })
+      .expect(400);
+  });
 });
