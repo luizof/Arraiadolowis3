@@ -27,6 +27,7 @@ table button{margin:0 0 0 5px;padding:4px 8px;font-size:14px;}
 <table id="hist"></table>
 <datalist id="playersBlue"></datalist>
 <datalist id="playersYellow"></datalist>
+<script src="helpers.js"></script>
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
@@ -42,10 +43,10 @@ function loadPlayers(){
 function updateLists(){
   const blue = Object.keys(players).filter(n => players[n] === 'blue');
   const yellow = Object.keys(players).filter(n => players[n] === 'yellow');
-  playersBlueElem.innerHTML = blue.map(n => `<option value="${n}">`).join('');
-  playersYellowElem.innerHTML = yellow.map(n => `<option value="${n}">`).join('');
+  playersBlueElem.innerHTML = blue.map(n => `<option value="${escapeHtml(n)}">`).join('');
+  playersYellowElem.innerHTML = yellow.map(n => `<option value="${escapeHtml(n)}">`).join('');
 }
-function loadTeams(){fetch('/api/state').then(r=>r.json()).then(s=>{teamNames=s.teamNames;beerWin.innerHTML=`<option value="blue">${teamNames.blue}</option><option value="yellow">${teamNames.yellow}</option>`;});}
+function loadTeams(){fetch('/api/state').then(r=>r.json()).then(s=>{teamNames=s.teamNames;beerWin.innerHTML=`<option value="blue">${escapeHtml(teamNames.blue)}</option><option value="yellow">${escapeHtml(teamNames.yellow)}</option>`;});}
 function ensurePlayer(name,teamHint){if(!name||players[name])return;const team=teamHint||prompt(`Time para ${name}? (blue/yellow)`);if(team){post('/api/player',{name,team});players[name]=team;updateLists();}}
 function addBeer(){[beerBlueP1.value,beerBlueP2.value].forEach(n=>ensurePlayer(n,'blue'));[beerYellowP1.value,beerYellowP2.value].forEach(n=>ensurePlayer(n,'yellow'));post('/api/beer',{team1:[beerBlueP1.value,beerBlueP2.value],team2:[beerYellowP1.value,beerYellowP2.value],winner:beerWin.value});beerBlueP1.value='';beerBlueP2.value='';beerYellowP1.value='';beerYellowP2.value='';beerWin.value='';}
 const playersBlueElem=document.getElementById('playersBlue');
@@ -54,11 +55,11 @@ const playersElem=document.getElementById('players');
 function loadHistory(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const rows=s.beerPongs.map((b,i)=>`<tr>
-      <td><input data-i="${i}" class="t1p1" value="${b.team1[0]}" list="players"></td>
-      <td><input data-i="${i}" class="t1p2" value="${b.team1[1]}" list="players"></td>
-      <td><input data-i="${i}" class="t2p1" value="${b.team2[0]}" list="players"></td>
-      <td><input data-i="${i}" class="t2p2" value="${b.team2[1]}" list="players"></td>
-      <td><input data-i="${i}" class="win" value="${b.winner}" list="players"></td>
+      <td><input data-i="${i}" class="t1p1" value="${escapeHtml(b.team1[0])}" list="players"></td>
+      <td><input data-i="${i}" class="t1p2" value="${escapeHtml(b.team1[1])}" list="players"></td>
+      <td><input data-i="${i}" class="t2p1" value="${escapeHtml(b.team2[0])}" list="players"></td>
+      <td><input data-i="${i}" class="t2p2" value="${escapeHtml(b.team2[1])}" list="players"></td>
+      <td><input data-i="${i}" class="win" value="${escapeHtml(b.winner)}" list="players"></td>
       <td><button onclick="save(${i})">Salvar</button><button onclick="del(${i})">Excluir</button></td>
     </tr>`).join('');
     document.getElementById('hist').innerHTML=`<tbody>${rows}</tbody>`;
