@@ -1,3 +1,7 @@
+if(!window.WebSocket||!document.querySelector){
+  document.body.innerHTML='<div style="padding:20px;font-family:sans-serif;text-align:center">Seu navegador n\u00E3o suporta os recursos necess\u00E1rios para exibir esta p\u00E1gina.</div>';
+  console.warn('Navegador sem suporte: WebSocket ou querySelector ausente');
+}else{
 const slidesEl=document.getElementById('slides');
 let state={};
 let timer;
@@ -131,3 +135,4 @@ function render(){
 
 const ws=new WebSocket(`ws://${location.host}`);
 ws.onmessage=e=>{state=JSON.parse(e.data);render();};
+}
