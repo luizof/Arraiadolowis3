@@ -156,7 +156,6 @@ describe('Express API', () => {
     .send({ name: 'Alice', time: 'NaN' })
     .expect(400);
   });
-  });
 
   it('renames a player and updates all event references', async () => {
     await request(app).post('/api/reset').expect(200);
