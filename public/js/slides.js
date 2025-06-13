@@ -211,7 +211,26 @@ if (!document.querySelector) {
     render();
   };
   var fetchState = function fetchState() {
-    fetch('/api/state').then(function (r) {
+    var doFetch = window.fetch ? window.fetch : function (url) {
+      return new Promise(function (resolve, reject) {
+        try {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url);
+          xhr.onload = function () {
+            resolve({
+              json: function json() {
+                return Promise.resolve(JSON.parse(xhr.responseText));
+              }
+            });
+          };
+          xhr.onerror = reject;
+          xhr.send();
+        } catch (e) {
+          reject(e);
+        }
+      });
+    };
+    doFetch('/api/state').then(function (r) {
       return r.json();
     }).then(updateAndRender)["catch"](function (err) {
       return console.error('Polling failed', err);

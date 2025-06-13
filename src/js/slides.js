@@ -140,10 +140,23 @@ function updateAndRender(data){
 }
 
 function fetchState(){
-  fetch('/api/state')
-    .then(r=>r.json())
+  var doFetch = window.fetch ? window.fetch : function(url){
+    return new Promise(function(resolve,reject){
+      try{
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.onload = function(){
+          resolve({ json: function(){ return Promise.resolve(JSON.parse(xhr.responseText)); } });
+        };
+        xhr.onerror = reject;
+        xhr.send();
+      }catch(e){reject(e);}
+    });
+  };
+  doFetch('/api/state')
+    .then(function(r){ return r.json(); })
     .then(updateAndRender)
-    .catch(err=>console.error('Polling failed',err));
+    .catch(function(err){ return console.error('Polling failed', err); });
 }
 
 function startPolling(){
