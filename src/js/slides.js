@@ -1,10 +1,11 @@
-if(!window.WebSocket||!document.querySelector){
+if(!document.querySelector){
   document.body.innerHTML='<div style="padding:20px;font-family:sans-serif;text-align:center">Seu navegador n\u00E3o suporta os recursos necess\u00E1rios para exibir esta p\u00E1gina.</div>';
-  console.warn('Navegador sem suporte: WebSocket ou querySelector ausente');
+  console.warn('Navegador sem suporte: querySelector ausente');
 }else{
 const slidesEl=document.getElementById('slides');
 let state={};
 let timer;
+let pollTimer;
 const bgImages={
   bull:'backgrounds/bull.jpg',
   cotton:'backgrounds/cotton.jpg',
@@ -133,6 +134,36 @@ function render(){
   if(slidesEl.children.length>0){show();schedule();}
 }
 
-const ws=new WebSocket(`ws://${location.host}`);
-ws.onmessage=e=>{state=JSON.parse(e.data);render();};
+function updateAndRender(data){
+  state=data;
+  render();
+}
+
+function fetchState(){
+  fetch('/api/state')
+    .then(r=>r.json())
+    .then(updateAndRender)
+    .catch(err=>console.error('Polling failed',err));
+}
+
+function startPolling(){
+  clearInterval(pollTimer);
+  fetchState();
+  pollTimer=setInterval(fetchState,5000);
+}
+
+function startWebSocket(){
+  if(!window.WebSocket){
+    console.warn('WebSocket indispon\u00EDvel, iniciando polling');
+    startPolling();
+    return;
+  }
+  const proto=location.protocol==='https:'?'wss':'ws';
+  const ws=new WebSocket(`${proto}://${location.host}`);
+  ws.onmessage=e=>{updateAndRender(JSON.parse(e.data));};
+  ws.onerror=()=>{console.warn('WebSocket erro, alternando para polling');startPolling();};
+  ws.onclose=()=>{console.warn('WebSocket fechado, alternando para polling');startPolling();};
+}
+
+startWebSocket();
 }
