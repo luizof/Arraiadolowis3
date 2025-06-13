@@ -130,6 +130,29 @@ app.put('/api/player/:name', (req,res)=>{
   if(name !== oldName){
     data.players[name] = data.players[oldName];
     delete data.players[oldName];
+
+    data.bullTimes.forEach(r => {
+      if(r.name === oldName) r.name = name;
+    });
+    data.cottonWars.forEach(r => {
+      if(r.p1 === oldName) r.p1 = name;
+      if(r.p2 === oldName) r.p2 = name;
+      if(r.winner === oldName) r.winner = name;
+    });
+    data.beerPongs.forEach(b => {
+      b.team1 = b.team1.map(p => p === oldName ? name : p);
+      b.team2 = b.team2.map(p => p === oldName ? name : p);
+    });
+    data.pacalWars.forEach(r => {
+      if(r.p1 === oldName) r.p1 = name;
+      if(r.p2 === oldName) r.p2 = name;
+      if(r.winner === oldName) r.winner = name;
+    });
+    if (data.bingoWinners) {
+      if(data.bingoWinners.first === oldName) data.bingoWinners.first = name;
+      if(data.bingoWinners.second === oldName) data.bingoWinners.second = name;
+      if(data.bingoWinners.third === oldName) data.bingoWinners.third = name;
+    }
   }
   if(team) data.players[name] = team;
   saveData();

@@ -4,7 +4,7 @@ This project provides a simple slide show and admin panel for a local party scor
 
 ## Features
 
-- Rotating slideshow where each slide stays on screen for **5 seconds**.
+- Rotating slideshow where each slide stays on screen for **10 seconds**.
 - Seven different slides show the event information:
   1. **Top 6 bull riding times** with the points awarded and a trophy on the first place.
   2. **Cotonete battles** history displaying the winner with a trophy.

@@ -137,6 +137,7 @@ describe('Express API', () => {
       .expect(400);
   });
 
+
   it('rejects invalid bull times', async () => {
     await request(app).post('/api/player').send({ name: 'Alice', team: 'blue' }).expect(200);
 
@@ -154,5 +155,25 @@ describe('Express API', () => {
       .put('/api/bull/0')
       .send({ name: 'Alice', time: 'NaN' })
       .expect(400);
+
+  it('renames a player and updates all event references', async () => {
+    await request(app).post('/api/reset').expect(200);
+    await request(app).post('/api/player').send({ name: 'Old', team: 'blue' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'Opp', team: 'yellow' }).expect(200);
+
+    await request(app)
+      .post('/api/cotton')
+      .send({ p1: 'Old', p2: 'Opp', winner: 'Old' })
+      .expect(200);
+
+    await request(app).put('/api/player/Old').send({ name: 'New' }).expect(200);
+
+    const res = await request(app).get('/api/state').expect(200);
+    expect(res.body.players.Old).toBeUndefined();
+    expect(res.body.players.New).toBe('blue');
+    expect(res.body.cottonWars[0].p1).toBe('New');
+    expect(res.body.cottonWars[0].winner).toBe('New');
+    expect(res.body.scores.blue).toBe(res.body.points.cottonWin);
+
   });
 });
