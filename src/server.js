@@ -168,7 +168,9 @@ app.delete('/api/player/:name', (req,res)=>{
 
 app.post('/api/bull', (req,res)=>{
   const {name,time} = req.body;
-  data.bullTimes.push({name,time:parseFloat(time)});
+  const t = parseFloat(time);
+  if(!Number.isFinite(t)) return res.status(400).end();
+  data.bullTimes.push({name,time:t});
   saveData();
   res.end();
 });
@@ -177,7 +179,9 @@ app.put('/api/bull/:index', (req,res)=>{
   const idx = parseInt(req.params.index,10);
   if(Number.isNaN(idx) || !data.bullTimes[idx]) return res.status(404).end();
   const {name,time} = req.body;
-  data.bullTimes[idx] = {name,time:parseFloat(time)};
+  const t = parseFloat(time);
+  if(!Number.isFinite(t)) return res.status(400).end();
+  data.bullTimes[idx] = {name,time:t};
   saveData();
   res.end();
 });
