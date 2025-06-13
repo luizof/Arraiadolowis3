@@ -24,16 +24,17 @@ table button{margin:0 0 0 5px;padding:4px 8px;font-size:14px;}
 <datalist id="players"></datalist>
 <h2>Histórico</h2>
 <table id="hist"></table>
+<script src="helpers.js"></script>
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
-function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${n}">`).join('');});}
+function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${escapeHtml(n)}">`).join('');});}
 function askTeam(name){
   return new Promise(resolve=>{
     const overlay=document.createElement('div');
     Object.assign(overlay.style,{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center'});
     overlay.innerHTML=`<div style="background:white;padding:20px;text-align:center;">
-        <p>Selecione o time para ${name}</p>
+        <p>Selecione o time para ${escapeHtml(name)}</p>
         <button id="chooseBlue">Azul</button>
         <button id="chooseYellow">Amarelo</button>
       </div>`;
@@ -46,14 +47,14 @@ function askTeam(name){
 async function ensurePlayer(name){
   if(!name||players[name])return;
   const team=await askTeam(name);
-  if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}
+  if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${escapeHtml(n)}">`).join('');}
 }
 async function addBull(){await ensurePlayer(bullPlayer.value);post('/api/bull',{name:bullPlayer.value,time:bullTime.value});bullPlayer.value='';bullTime.value='';}
 const playersElem=document.getElementById('players');
 function loadHistory(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const rows=s.bullTimes.map((b,i)=>`<tr>
-      <td><input data-i="${i}" class="name" value="${b.name}" list="players"></td>
+      <td><input data-i="${i}" class="name" value="${escapeHtml(b.name)}" list="players"></td>
       <td><input data-i="${i}" class="time" type="number" value="${b.time}"></td>
       <td><button onclick="save(${i})">Salvar</button><button onclick="del(${i})">Excluir</button></td>
     </tr>`).join('');

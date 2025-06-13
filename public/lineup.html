@@ -26,6 +26,7 @@ table button{margin:0 0 0 5px;padding:4px 8px;font-size:14px;}
 <label>Nome <input id="newName"></label>
 <label>Horário <input id="newTime" type="datetime-local"></label>
 <button id="addBtn">Adicionar</button>
+<script src="helpers.js"></script>
 <script>
 async function load(){
   const res = await fetch('/api/attractions');
@@ -35,8 +36,8 @@ async function load(){
   data.forEach((a,idx)=>{
     const tr=document.createElement('tr');
     tr.dataset.index=idx;
-    tr.innerHTML=`<td><input data-field="name" value="${a.name}" disabled></td>`+
-      `<td><input data-field="time" type="datetime-local" value="${a.time}" disabled></td>`+
+    tr.innerHTML=`<td><input data-field="name" value="${escapeHtml(a.name)}" disabled></td>`+
+      `<td><input data-field="time" type="datetime-local" value="${escapeHtml(a.time)}" disabled></td>`+
       `<td><button data-action="edit">Editar</button>`+
       `<button data-action="save" style="display:none">Salvar</button>`+
       `<button data-action="delete">Excluir</button></td>`;

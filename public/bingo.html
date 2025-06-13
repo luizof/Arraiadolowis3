@@ -23,16 +23,17 @@ table button{margin:0 0 0 5px;padding:4px 8px;font-size:14px;}
 <datalist id="players"></datalist>
 <h2>Histórico</h2>
 <table id="hist"></table>
+<script src="helpers.js"></script>
 <script>
 function post(url,data){fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
 let players={};
-function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${n}">`).join('');});}
+function loadPlayers(){fetch('/api/players').then(r=>r.json()).then(p=>{players=p;playersElem.innerHTML=Object.keys(p).map(n=>`<option value="${escapeHtml(n)}">`).join('');});}
 function askTeam(name){
   return new Promise(resolve=>{
     const overlay=document.createElement('div');
     Object.assign(overlay.style,{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center'});
     overlay.innerHTML=`<div style="background:white;padding:20px;text-align:center;">
-        <p>Selecione o time para ${name}</p>
+        <p>Selecione o time para ${escapeHtml(name)}</p>
         <button id="chooseBlue">Azul</button>
         <button id="chooseYellow">Amarelo</button>
       </div>`;
@@ -45,7 +46,7 @@ function askTeam(name){
 async function ensurePlayer(name){
   if(!name||players[name])return;
   const team=await askTeam(name);
-  if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${n}">`).join('');}
+  if(team){post('/api/player',{name,team});players[name]=team;playersElem.innerHTML=Object.keys(players).map(n=>`<option value="${escapeHtml(n)}">`).join('');}
 }
 async function addBingo(){for(const n of [bingo1.value,bingo2.value,bingo3.value]) await ensurePlayer(n);post('/api/bingo',{first:bingo1.value,second:bingo2.value,third:bingo3.value});bingo1.value='';bingo2.value='';bingo3.value='';}
 const playersElem=document.getElementById('players');
@@ -53,9 +54,9 @@ function loadHistory(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const b=s.bingoWinners||{first:'',second:'',third:''};
     const row=`<tr>
-      <td><input id="h1" value="${b.first||''}" list="players"></td>
-      <td><input id="h2" value="${b.second||''}" list="players"></td>
-      <td><input id="h3" value="${b.third||''}" list="players"></td>
+      <td><input id="h1" value="${escapeHtml(b.first||'')}" list="players"></td>
+      <td><input id="h2" value="${escapeHtml(b.second||'')}" list="players"></td>
+      <td><input id="h3" value="${escapeHtml(b.third||'')}" list="players"></td>
       <td><button onclick="save()">Salvar</button><button onclick="del()">Excluir</button></td>
     </tr>`;
     document.getElementById('hist').innerHTML=`<tbody>${row}</tbody>`;

@@ -21,6 +21,7 @@ table button{margin:0 0 0 5px;padding:4px 8px;font-size:14px;}
 <input id="newName" placeholder="Nome"/>
 <select id="newTeam"><option value="blue">Azul</option><option value="yellow">Amarelo</option></select>
 <button onclick="addPlayer()">Adicionar</button>
+<script src="helpers.js"></script>
 <script>
 function fetchPlayers(){
   fetch('/api/players').then(r=>r.json()).then(p=>{players=p;render();});
@@ -30,8 +31,9 @@ function render(){
   const tbl=document.getElementById('playersTable');
   tbl.innerHTML='<tr><th>Nome</th><th>Time</th><th>Ações</th></tr>'+
     Object.entries(players).map(([name,team])=>{
+      const safe=escapeHtml(name);
       return `<tr>
-        <td><input value="${name}" data-old="${name}" class="name"/></td>
+        <td><input value="${safe}" data-old="${safe}" class="name"/></td>
         <td>
           <select class="team">
             <option value="blue" ${team==='blue'?'selected':''}>Azul</option>
