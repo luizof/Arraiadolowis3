@@ -136,8 +136,9 @@ function render(){
   }
   if(state.attractions.length>0){
     const now=new Date();
-    const current=state.attractions.find(a=> new Date(a.time)<=now);
-    const next=state.attractions.find(a=> new Date(a.time)>now);
+    const attractions=[...state.attractions].sort((a,b)=>new Date(a.time)-new Date(b.time));
+    const current=attractions.filter(a=>new Date(a.time)<=now).pop();
+    const next=attractions.find(a=> new Date(a.time)>now);
     let html='<div class="attractions-slide">';
     html+='<div class="attractions-title">Atrações 🎪</div>';
     if(current){
