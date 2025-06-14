@@ -28,18 +28,20 @@ body{margin:0;padding:0;font-family:sans-serif;background:black;color:white;}
 .score-bar{background:rgba(255,255,255,0.2);border-radius:4px;padding:4px;}
 .score-bar.team-blue{background-color:#1c3c7d;}
 .score-bar.team-yellow{background-color:#7d6a1c;color:black;}
-.install-card{background:#000033;text-align:center;display:flex;align-items:center;gap:10px;}
-.install-card img{width:60px;height:60px;border-radius:12px;}
+.install-prompt{text-align:center;margin:20px 0;}
+.install-prompt img{width:60px;height:60px;border-radius:12px;display:block;margin:0 auto;}
+.install-hint{font-size:0.8em;}
 </style>
 </head>
 <body>
 <img src="../images/admin-header.png" alt="Logo" class="header-img">
-<div class="card install-card">
-  <img src="../appicon.jpg" alt="Ícone do app">
-  <div>Adicione este site à tela inicial: toque em <strong>Compartilhar</strong> e depois <strong>Adicionar à Tela de Início</strong>.</div>
-</div>
 <div id="attractions-info"></div>
 <div id="cards"></div>
+<div class="install-prompt">
+  <img src="../appicon.jpg" alt="Ícone do app">
+  <strong>Instalar app</strong><br>
+  <span class="install-hint">Toque em compartilhar e add à tela de início</span>
+</div>
 <script src="../js/mobile.js"></script>
 </body>
 </html>
