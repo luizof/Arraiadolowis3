@@ -5,10 +5,11 @@ const path = require('path');
 process.env.DATA_FILE = path.join(__dirname, 'test-data.json');
 const { app } = require('../src/server');
 
-beforeEach(() => {
+beforeEach(async () => {
   if (fs.existsSync(process.env.DATA_FILE)) {
     fs.unlinkSync(process.env.DATA_FILE);
   }
+  await request(app).post('/api/reset');
 });
 
 afterAll(() => {
@@ -176,5 +177,17 @@ describe('Express API', () => {
     expect(res.body.cottonWars[0].winner).toBe('New');
     expect(res.body.scores.blue).toBe(res.body.points.cottonWin);
 
+  });
+
+  it('rejects creating a player with duplicate name', async () => {
+    await request(app).post('/api/player').send({ name: 'Dup', team: 'blue' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'Dup', team: 'yellow' }).expect(409);
+  });
+
+  it('rejects renaming a player to an existing name', async () => {
+    await request(app).post('/api/player').send({ name: 'Existing', team: 'blue' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'Other', team: 'yellow' }).expect(200);
+
+    await request(app).put('/api/player/Other').send({ name: 'Existing' }).expect(409);
   });
 });
