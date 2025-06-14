@@ -192,4 +192,22 @@ describe('Express API', () => {
 
     await request(app).put('/api/player/Other').send({ name: 'Existing' }).expect(409);
   });
+
+  it('updates hidden games configuration', async () => {
+    await request(app)
+      .post('/api/hidden-games')
+      .send({ beer: true })
+      .expect(200);
+
+    let res = await request(app).get('/api/state').expect(200);
+    expect(res.body.hiddenGames.beer).toBe(true);
+
+    await request(app)
+      .post('/api/hidden-games')
+      .send({ beer: false })
+      .expect(200);
+
+    res = await request(app).get('/api/state').expect(200);
+    expect(res.body.hiddenGames.beer).toBe(false);
+  });
 });

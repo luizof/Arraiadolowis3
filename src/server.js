@@ -45,7 +45,8 @@ const defaultData = {
     bingoSecond: 3,
     bingoThird: 1
   },
-  scores: {blue:0, yellow:0}
+  scores: {blue:0, yellow:0},
+  hiddenGames: {}
 };
 
 let data = JSON.parse(JSON.stringify(defaultData));
@@ -378,9 +379,20 @@ app.post('/api/config/points', (req,res)=>{
   res.end();
 });
 
+app.get('/api/hidden-games', (req,res)=>{
+  res.json(data.hiddenGames);
+});
+
+app.post('/api/hidden-games', (req,res)=>{
+  if(typeof req.body!== 'object') return res.status(400).end();
+  data.hiddenGames = { ...data.hiddenGames, ...req.body };
+  saveData();
+  res.end();
+});
+
 app.post('/api/reset', (req,res)=>{
   Object.assign(data, {
-    players:{}, bullTimes:[], bullFinished:false, cottonWars:[], beerPongs:[], pacalWars:[], bingoWinners:null, attractions:[], scores:{blue:0,yellow:0}
+    players:{}, bullTimes:[], bullFinished:false, cottonWars:[], beerPongs:[], pacalWars:[], bingoWinners:null, attractions:[], scores:{blue:0,yellow:0}, hiddenGames:{}
   });
   saveData();
   res.end();

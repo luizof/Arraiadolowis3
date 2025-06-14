@@ -62,7 +62,7 @@ if (!document.querySelector) {
     });
     scoreCard.innerHTML = scoreHtml;
     container.appendChild(scoreCard);
-    if (state.bullTimes.length > 0) {
+    if (state.bullTimes.length > 0 && !state.hiddenGames.bull) {
       var keys = ['bullFirst', 'bullSecond', 'bullThird', 'bullFourth', 'bullFifth'];
       var sorted = _toConsumableArray(state.bullTimes).sort(function (a, b) {
         return b.time - a.time;
@@ -78,7 +78,7 @@ if (!document.querySelector) {
       card.innerHTML = _html;
       container.appendChild(card);
     }
-    if (state.cottonWars.length > 0) {
+    if (state.cottonWars.length > 0 && !state.hiddenGames.cotton) {
       var pts = state.points.cottonWin || 0;
       var recent = state.cottonWars.slice().reverse();
       var _card = document.createElement('div');
@@ -98,7 +98,7 @@ if (!document.querySelector) {
       _card.innerHTML = _html2;
       container.appendChild(_card);
     }
-    if (state.bingoWinners) {
+    if (state.bingoWinners && !state.hiddenGames.bingo) {
       var _card2 = document.createElement('div');
       _card2.className = 'card bingo-card';
       var _html3 = '<h2>Bingo 🎉</h2><ol>';
@@ -126,7 +126,7 @@ if (!document.querySelector) {
       _card2.innerHTML = _html3;
       container.appendChild(_card2);
     }
-    if (state.beerPongs.length > 0) {
+    if (state.beerPongs.length > 0 && !state.hiddenGames.beer) {
       var _pts = state.points.beerWin || 0;
       var _recent = state.beerPongs.slice().reverse();
       var _card3 = document.createElement('div');
@@ -143,7 +143,7 @@ if (!document.querySelector) {
       _card3.innerHTML = _html4;
       container.appendChild(_card3);
     }
-    if (state.pacalWars.length > 0) {
+    if (state.pacalWars.length > 0 && !state.hiddenGames.pacal) {
       var _pts2 = state.points.pacalWin || 0;
       var _recent2 = state.pacalWars.slice(-6).reverse();
       var _card4 = document.createElement('div');
@@ -219,7 +219,8 @@ if (!document.querySelector) {
     scores: {
       blue: 0,
       yellow: 0
-    }
+    },
+    hiddenGames: {}
   };
   var state = _objectSpread({}, defaultState);
   var pollTimer;

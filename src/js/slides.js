@@ -26,7 +26,8 @@ const defaultState={
     bingoSecond:3,
     bingoThird:1
   },
-  scores:{blue:0,yellow:0}
+  scores:{blue:0,yellow:0},
+  hiddenGames:{}
 };
 let state={...defaultState};
 let timer;
@@ -44,7 +45,7 @@ function render(){
   clearTimeout(timer);
   slidesEl.innerHTML='';
   const slides=[];
-    if(state.bullTimes.length>0){
+    if(state.bullTimes.length>0 && !state.hiddenGames.bull){
       const keys=['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
       const sorted=[...state.bullTimes].sort((a,b)=>b.time-a.time).slice(0,10);
       let html='<div class="bull-slide">';
@@ -67,7 +68,7 @@ function render(){
       html+='</table></div>';
       slides.push({color:'darkred',image:bgImages.bull,html});
     }
-  if(state.cottonWars.length>0){
+  if(state.cottonWars.length>0 && !state.hiddenGames.cotton){
     const pts = state.points.cottonWin || 0;
     const recent = state.cottonWars.slice().reverse();
     let html='<div class="cotton-slide"><h1>Guerra de Cotonete ⚔️</h1><div class="cotton-wrapper">';
@@ -80,7 +81,7 @@ function render(){
     html+='</div></div>';
     slides.push({color:'green',image:bgImages.cotton,html});
   }
-  if(state.bingoWinners){
+  if(state.bingoWinners && !state.hiddenGames.bingo){
     let html='<div class="bingo-slide">';
     html+='<div class="bingo-title">Bingo 🎉</div>';
     html+='<table class="bingo-table">';
@@ -97,7 +98,7 @@ function render(){
     html+='</table></div>';
     slides.push({color:'purple',image:bgImages.bingo,html});
   }
-  if(state.beerPongs.length>0){
+  if(state.beerPongs.length>0 && !state.hiddenGames.beer){
     const pts = state.points.beerWin || 0;
     const recent = state.beerPongs.slice(-6).reverse();
     let html='<div class="beer-slide"><h1 class="beer-title">🍺 Beer Pong 🍺</h1><div class="beer-wrapper">';
@@ -111,7 +112,7 @@ function render(){
     html+='</div></div>';
     slides.push({color:'orange',image:bgImages.beer,html});
   }
-  if(state.pacalWars.length>0){
+  if(state.pacalWars.length>0 && !state.hiddenGames.pacal){
     const pts = state.points.pacalWin || 0;
     const recent = state.pacalWars.slice(-6).reverse();
     let html='<div class="pacal-slide"><h1>Pacal 🎯</h1><div class="pacal-wrapper">';

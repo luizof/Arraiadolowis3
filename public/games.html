@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jogos</title>
+<style>
+body{font-family:'Trebuchet MS',sans-serif;padding:10px;max-width:480px;margin:auto;}
+label{display:block;margin-top:10px;}
+input[type=checkbox]{margin-right:10px;}
+button{margin-top:20px;padding:8px 12px;font-size:16px;}
+</style>
+</head>
+<body>
+<h1>Mostrar Jogos</h1>
+<div id="games"></div>
+<button onclick="save()">Salvar</button>
+<script>
+const games=[
+  {key:'bull',label:'Touro Mec\u00E2nico'},
+  {key:'cotton',label:'Cotonete'},
+  {key:'beer',label:'Beer Pong'},
+  {key:'pacal',label:'Pacal'},
+  {key:'bingo',label:'Bingo'}
+];
+function load(){
+  fetch('/api/hidden-games').then(r=>r.json()).then(h=>{
+    const container=document.getElementById('games');
+    container.innerHTML='';
+    games.forEach(g=>{
+      const div=document.createElement('label');
+      div.innerHTML=`<input type='checkbox' id='game-${g.key}'> ${g.label}`;
+      container.appendChild(div);
+      document.getElementById('game-'+g.key).checked=!h[g.key];
+    });
+  });
+}
+function save(){
+  const body={};
+  games.forEach(g=>{
+    body[g.key]=!document.getElementById('game-'+g.key).checked;
+  });
+  fetch('/api/hidden-games',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+}
+load();
+</script>
+</body>
+</html>
