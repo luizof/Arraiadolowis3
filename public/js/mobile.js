@@ -220,4 +220,12 @@ if (!document.querySelector) {
   var state = _objectSpread({}, defaultState);
   var pollTimer;
   startPolling();
+  // Force a full page reload every 20 seconds on mobile
+  setInterval(function () {
+    try {
+      window.location.reload();
+    } catch (e) {
+      console.error('Reload failed', e);
+    }
+  }, 20000);
 }

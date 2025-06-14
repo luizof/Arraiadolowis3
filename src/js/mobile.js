@@ -162,4 +162,8 @@ function startPolling(){
   pollTimer=setInterval(fetchState,5000);
 }
 startPolling();
+// Force a full page reload every 20 seconds on mobile
+setInterval(()=>{
+  try{ window.location.reload(); }catch(e){ console.error('Reload failed', e); }
+},20000);
 }
