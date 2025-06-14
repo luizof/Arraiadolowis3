@@ -88,11 +88,11 @@ function render(){
       {name:state.bingoWinners.first,key:'bingoFirst',trophy:'🏆',pos:'1º'},
       {name:state.bingoWinners.second,key:'bingoSecond',pos:'2º'},
       {name:state.bingoWinners.third,key:'bingoThird',pos:'3º'}
-    ];
+    ].filter(r=>r.name);
     rows.forEach((r,i)=>{
       const pts=state.points[r.key]||0;
       const cls=i===0?'first-place':i===1?'second-place':'';
-      html+=`<tr class="${cls}"><td>${r.pos} <span class="team-${state.players[r.name]}"> ${r.name||''} </span> (${pts} pts) ${r.trophy||''}</td></tr>`;
+      html+=`<tr class="${cls}"><td>${r.pos} <span class="team-${state.players[r.name]}"> ${r.name} </span> (${pts} pts) ${r.trophy||''}</td></tr>`;
     });
     html+='</table></div>';
     slides.push({color:'purple',image:bgImages.bingo,html});
