@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="adminicon.png">
 <title>Admin Arraia</title>
 <style>
 body{
@@ -36,6 +39,9 @@ body{
 }
 .menu-item span.emoji{font-size:48px;}
 .menu-item span.label{margin-top:auto;padding-bottom:5px;font-size:14px;}
+ .install-prompt{text-align:center;margin:20px 0;}
+ .install-prompt img{width:60px;height:60px;border-radius:12px;display:block;margin:0 auto;}
+ .install-hint{font-size:0.8em;}
 @media(max-width:600px){
   body{grid-template-columns:repeat(2,1fr);}
 }
@@ -83,5 +89,22 @@ body{
   <span class="emoji">♻️</span>
   <span class="label">Reset</span>
 </a>
+<div class="install-prompt">
+  <img src="adminicon.png" alt="Ícone do app">
+  <strong>Instalar app</strong><br>
+  <span class="install-hint">Toque em compartilhar e add à tela de início</span>
+</div>
+<script>
+  (function(){
+    function hidePrompt(){
+      var el=document.querySelector('.install-prompt');
+      if(el) el.style.display='none';
+    }
+    if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone){
+      hidePrompt();
+    }
+    window.addEventListener('appinstalled',hidePrompt);
+  })();
+</script>
 </body>
 </html>
