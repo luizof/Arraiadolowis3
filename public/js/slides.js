@@ -94,11 +94,13 @@ if (!document.querySelector) {
         name: state.bingoWinners.third,
         key: 'bingoThird',
         pos: '3º'
-      }];
+      }].filter(function (r) {
+        return r.name;
+      });
       rows.forEach(function (r, i) {
         var pts = state.points[r.key] || 0;
         var cls = i === 0 ? 'first-place' : i === 1 ? 'second-place' : '';
-        _html3 += "<tr class=\"".concat(cls, "\"><td>").concat(r.pos, " <span class=\"team-").concat(state.players[r.name], "\"> ").concat(r.name || '', " </span> (").concat(pts, " pts) ").concat(r.trophy || '', "</td></tr>");
+        _html3 += "<tr class=\"".concat(cls, "\"><td>").concat(r.pos, " <span class=\"team-").concat(state.players[r.name], "\"> ").concat(r.name, " </span> (").concat(pts, " pts) ").concat(r.trophy || '', "</td></tr>");
       });
       _html3 += '</table></div>';
       slides.push({
