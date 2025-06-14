@@ -170,14 +170,18 @@ if (!document.querySelector) {
     var scoreEntries = Object.entries(state.scores).sort(function (a, b) {
       return b[1] - a[1];
     });
-    var html = '<h1>Placar 🏆</h1><ul>';
+    var maxScore = Math.max.apply(Math, _toConsumableArray(scoreEntries.map(function (s) {
+      return s[1];
+    })).concat([1]));
+    var html = '<div class="score-slide"><h1>Placar</h1><div class="score-chart">';
     scoreEntries.forEach(function (_ref, i) {
       var _ref2 = _slicedToArray(_ref, 2),
         team = _ref2[0],
         score = _ref2[1];
-      html += "<li>".concat(state.teamNames[team], " - ").concat(score, " ").concat(i == 0 ? '🏆' : '', "</li>");
+      var pct = Math.round(score / maxScore * 100);
+      html += "<div class=\"score-row\"><div class=\"team-label\">".concat(state.teamNames[team], "</div><div class=\"score-bar team-").concat(team, "\" style=\"width:").concat(pct, "%\"><span class=\"score-value\">").concat(score).concat(i == 0 ? ' 🏆' : '', "</span></div></div>");
     });
-    html += '</ul>';
+    html += '</div></div>';
     slides.push({
       color: 'black',
       image: bgImages.score,
