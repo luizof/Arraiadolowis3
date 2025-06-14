@@ -49,14 +49,14 @@ body,html{margin:0;padding:0;height:100%;width:100%;font-family:sans-serif;color
 .beer-row{font-size:48px;display:flex;align-items:baseline;padding:5px 20px;}
 
 /* Estilos para slide de placar */
-.score-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;}
+.score-slide{font-family:'Comic Sans MS','Comic Sans',cursive;font-weight:bold;display:flex;flex-direction:column;justify-content:center;height:100%;}
 .score-chart{width:90%;margin:0 auto;margin-top:40px;}
 .score-row{display:flex;align-items:center;margin:20px 0;height:100px;font-size:64px;}
-.team-label{text-align:right;width:25%;padding-right:20px;}
-.score-bar{flex-grow:1;height:100%;border-radius:50px;display:flex;align-items:center;justify-content:flex-end;padding-right:40px;color:black;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,0.3);}
-.score-bar.team-blue{background-color:rgba(0,0,255,0.8);}
-.score-bar.team-yellow{background-color:rgba(255,215,0,0.8);}
-.score-value{font-size:64px;}
+.score-bar{flex-grow:1;height:100%;border-radius:50px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;font-weight:bold;color:black;box-shadow:0 4px 10px rgba(0,0,0,0.3);}
+.score-bar.team-blue{background-color:rgba(0,0,255,0.8);color:white;}
+.score-bar.team-yellow{background-color:rgba(255,215,0,0.8);color:black;}
+.score-name{white-space:nowrap;}
+.score-value{font-size:64px;white-space:nowrap;}
 
 </style>
 </head>

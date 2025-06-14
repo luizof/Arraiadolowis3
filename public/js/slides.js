@@ -175,13 +175,13 @@ if (!document.querySelector) {
     var maxScore = Math.max.apply(Math, _toConsumableArray(scoreEntries.map(function (s) {
       return s[1];
     })).concat([1]));
-    var html = '<div class="score-slide"><h1>Placar</h1><div class="score-chart">';
+    var html = '<div class="score-slide"><h1>Placar 🎉</h1><div class="score-chart">';
     scoreEntries.forEach(function (_ref, i) {
       var _ref2 = _slicedToArray(_ref, 2),
         team = _ref2[0],
         score = _ref2[1];
       var pct = Math.round(score / maxScore * 100);
-      html += "<div class=\"score-row\"><div class=\"team-label\">".concat(state.teamNames[team], "</div><div class=\"score-bar team-").concat(team, "\" style=\"width:").concat(pct, "%\"><span class=\"score-value\">").concat(score).concat(i == 0 ? ' 🏆' : '', "</span></div></div>");
+      html += "<div class=\"score-row\"><div class=\"score-bar team-".concat(team, "\" style=\"width:").concat(pct, "%\"><span class=\"score-name\">").concat(state.teamNames[team], "</span><span class=\"score-value\">").concat(score).concat(i == 0 ? ' 🏆' : '', "</span></div></div>");
     });
     html += '</div></div>';
     slides.push({
