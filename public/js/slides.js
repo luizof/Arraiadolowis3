@@ -38,7 +38,7 @@ if (!document.querySelector) {
         var right = sorted[row + 5];
         if (left) {
           var pts = row < keys.length ? state.points[keys[row]] || 0 : 0;
-          _html += "<td>".concat(row + 1, ". <span class=\"team-").concat(state.players[left.name], "\"> ").concat(left.name, " </span> - <span class=\"time\">").concat(left.time, "s</span>").concat(row < keys.length ? " (<span class=\"points\">".concat(pts, "</span> pts)") : '', " ").concat(row == 0 ? '🏆' : '', "</td>");
+          _html += "<td>".concat(row + 1, ". <span class=\"team-").concat(state.players[left.name], "\"> ").concat(left.name, "</span> - <span class=\"mono\"><span class=\"time\">").concat(left.time, "s</span>").concat(row < keys.length ? " (<span class=\"points\">".concat(pts, " pts</span>)") : '', "</span> ").concat(row == 0 ? '🏆' : '', "</td>");
         } else {
           _html += '<td></td>';
         }
@@ -68,7 +68,7 @@ if (!document.querySelector) {
         }) : '';
         var trophy1 = b.winner === b.p1 ? '🏆' : '';
         var trophy2 = b.winner === b.p2 ? '🏆' : '';
-        _html2 += "<div class=\"cotton-row\"><span class=\"team-".concat(state.players[b.p1], "\"> ").concat(b.p1).concat(trophy1, " </span> vs <span class=\"team-").concat(state.players[b.p2], "\"> ").concat(b.p2).concat(trophy2, " </span> (<span class=\"points\">+").concat(_pts, "</span>) <span class=\"cotton-time\">").concat(time, "</span></div>");
+        _html2 += "<div class=\"cotton-row\"><span class=\"team-".concat(state.players[b.p1], "\"> ").concat(b.p1).concat(trophy1, "</span><span class=\"vs\">vs</span><span class=\"team-").concat(state.players[b.p2], "\"> ").concat(b.p2).concat(trophy2, "</span> <span class=\"mono\">(<span class=\"points\">+").concat(_pts, "</span>) <span class=\"cotton-time\">").concat(time, "</span></span></div>");
       });
       _html2 += '</div></div>';
       slides.push({
@@ -116,9 +116,9 @@ if (!document.querySelector) {
       _recent.forEach(function (b) {
         var team1Color = state.players[b.team1[0]];
         var team2Color = state.players[b.team2[0]];
-        var trophy1 = team1Color === b.winner ? ' 🏆' : '';
-        var trophy2 = team2Color === b.winner ? ' 🏆' : '';
-        _html4 += "<div class=\"beer-row\"><span class=\"team-".concat(team1Color, "\"> ").concat(b.team1[0], " </span> & <span class=\"team-").concat(team1Color, "\"> ").concat(b.team1[1], " </span>").concat(trophy1, " vs <span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[0], " </span> & <span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[1], " </span>").concat(trophy2, " (<span class=\"points\">+").concat(_pts2, "</span>)</div>");
+        var trophy1 = team1Color === b.winner ? '🏆' : '';
+        var trophy2 = team2Color === b.winner ? '🏆' : '';
+        _html4 += "<div class=\"beer-row\"><span class=\"team-".concat(team1Color, "\"> ").concat(b.team1[0], " </span> & <span class=\"team-").concat(team1Color, "\"> ").concat(b.team1[1], " </span>").concat(trophy1, "<span class=\"vs\">vs</span><span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[0], " </span> & <span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[1], " </span>").concat(trophy2, " <span class=\"mono\">(<span class=\"points\">+").concat(_pts2, "</span>)</span></div>");
       });
       _html4 += '</div></div>';
       slides.push({
@@ -134,7 +134,7 @@ if (!document.querySelector) {
       _recent2.forEach(function (b) {
         var trophy1 = b.winner === b.p1 ? '🏆' : '';
         var trophy2 = b.winner === b.p2 ? '🏆' : '';
-        _html5 += "<div class=\"pacal-row\"><span class=\"team-".concat(state.players[b.p1], "\"> ").concat(b.p1).concat(trophy1, " </span> vs <span class=\"team-").concat(state.players[b.p2], "\"> ").concat(b.p2).concat(trophy2, " </span> (<span class=\"points\">+").concat(_pts3, "</span>)</div>");
+        _html5 += "<div class=\"pacal-row\"><span class=\"team-".concat(state.players[b.p1], "\"> ").concat(b.p1).concat(trophy1, "</span><span class=\"vs\">vs</span><span class=\"team-").concat(state.players[b.p2], "\"> ").concat(b.p2).concat(trophy2, "</span> <span class=\"mono\">(<span class=\"points\">+").concat(_pts3, "</span>)</span></div>");
       });
       _html5 += '</div></div>';
       slides.push({

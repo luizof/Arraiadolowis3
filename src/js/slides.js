@@ -56,7 +56,7 @@ function render(){
         const right=sorted[row+5];
         if(left){
           const pts=row<keys.length?state.points[keys[row]]||0:0;
-          html+=`<td>${row+1}. <span class="team-${state.players[left.name]}"> ${left.name} </span> - <span class="time">${left.time}s</span>${row<keys.length?` (<span class="points">${pts}</span> pts)`:''} ${row==0?'🏆':''}</td>`;
+          html+=`<td>${row+1}. <span class="team-${state.players[left.name]}"> ${left.name}</span> - <span class="mono"><span class="time">${left.time}s</span>${row<keys.length?` (<span class="points">${pts} pts</span>)`:''}</span> ${row==0?'🏆':''}</td>`;
         }else{html+='<td></td>';}
         if(right){
           const idx=row+5;
@@ -75,7 +75,7 @@ function render(){
       const time=b.time?new Date(b.time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
       const trophy1=b.winner===b.p1?'🏆':'';
       const trophy2=b.winner===b.p2?'🏆':'';
-      html+=`<div class="cotton-row"><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1} </span> vs <span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2} </span> (<span class="points">+${pts}</span>) <span class="cotton-time">${time}</span></div>`;
+      html+=`<div class="cotton-row"><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1}</span><span class="vs">vs</span><span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2}</span> <span class="mono">(<span class="points">+${pts}</span>) <span class="cotton-time">${time}</span></span></div>`;
     });
     html+='</div></div>';
     slides.push({color:'green',image:bgImages.cotton,html});
@@ -104,9 +104,9 @@ function render(){
     recent.forEach(b=>{
       const team1Color=state.players[b.team1[0]];
       const team2Color=state.players[b.team2[0]];
-      const trophy1=team1Color===b.winner?' 🏆':'';
-      const trophy2=team2Color===b.winner?' 🏆':'';
-      html+=`<div class="beer-row"><span class="team-${team1Color}"> ${b.team1[0]} </span> & <span class="team-${team1Color}"> ${b.team1[1]} </span>${trophy1} vs <span class="team-${team2Color}"> ${b.team2[0]} </span> & <span class="team-${team2Color}"> ${b.team2[1]} </span>${trophy2} (<span class="points">+${pts}</span>)</div>`;
+      const trophy1=team1Color===b.winner?'🏆':'';
+      const trophy2=team2Color===b.winner?'🏆':'';
+      html+=`<div class="beer-row"><span class="team-${team1Color}"> ${b.team1[0]} </span> & <span class="team-${team1Color}"> ${b.team1[1]} </span>${trophy1}<span class="vs">vs</span><span class="team-${team2Color}"> ${b.team2[0]} </span> & <span class="team-${team2Color}"> ${b.team2[1]} </span>${trophy2} <span class="mono">(<span class="points">+${pts}</span>)</span></div>`;
     });
     html+='</div></div>';
     slides.push({color:'orange',image:bgImages.beer,html});
@@ -118,7 +118,7 @@ function render(){
     recent.forEach(b=>{
       const trophy1=b.winner===b.p1?'🏆':'';
       const trophy2=b.winner===b.p2?'🏆':'';
-      html+=`<div class="pacal-row"><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1} </span> vs <span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2} </span> (<span class="points">+${pts}</span>)</div>`;
+      html+=`<div class="pacal-row"><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1}</span><span class="vs">vs</span><span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2}</span> <span class="mono">(<span class="points">+${pts}</span>)</span></div>`;
     });
     html+='</div></div>';
     slides.push({color:'brown',image:bgImages.pacal,html});
