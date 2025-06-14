@@ -56,11 +56,11 @@ function render(){
         const right=sorted[row+5];
         if(left){
           const pts=row<keys.length?state.points[keys[row]]||0:0;
-          html+=`<td>${row+1}. <span class="team-${state.players[left.name]}">${left.name}</span> - ${left.time}s${row<keys.length?` (${pts} pts)`:''} ${row==0?'🏆':''}</td>`;
+          html+=`<td>${row+1}. <span class="team-${state.players[left.name]}"> ${left.name} </span> - ${left.time}s${row<keys.length?` (${pts} pts)`:''} ${row==0?'🏆':''}</td>`;
         }else{html+='<td></td>';}
         if(right){
           const idx=row+5;
-          html+=`<td>${idx+1}. <span class="team-${state.players[right.name]}">${right.name}</span> - ${right.time}s</td>`;
+          html+=`<td>${idx+1}. <span class="team-${state.players[right.name]}"> ${right.name} </span> - ${right.time}s</td>`;
         }else{html+='<td></td>';}
         html+='</tr>';
       }
@@ -75,7 +75,7 @@ function render(){
       const time=b.time?new Date(b.time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
       const trophy1=b.winner===b.p1?'🏆':'';
       const trophy2=b.winner===b.p2?'🏆':'';
-      html+=`<div class="cotton-row"><span class="team-${state.players[b.p1]}">${b.p1}${trophy1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}${trophy2}</span> (+${pts}) <span class="cotton-time">${time}</span></div>`;
+      html+=`<div class="cotton-row"><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1} </span> vs <span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2} </span> (+${pts}) <span class="cotton-time">${time}</span></div>`;
     });
     html+='</div></div>';
     slides.push({color:'green',image:bgImages.cotton,html});
@@ -92,7 +92,7 @@ function render(){
     rows.forEach((r,i)=>{
       const pts=state.points[r.key]||0;
       const cls=i===0?'first-place':i===1?'second-place':'';
-      html+=`<tr class="${cls}"><td>${r.pos} <span class="team-${state.players[r.name]}">${r.name||''}</span> (${pts} pts) ${r.trophy||''}</td></tr>`;
+      html+=`<tr class="${cls}"><td>${r.pos} <span class="team-${state.players[r.name]}"> ${r.name||''} </span> (${pts} pts) ${r.trophy||''}</td></tr>`;
     });
     html+='</table></div>';
     slides.push({color:'purple',image:bgImages.bingo,html});
@@ -106,7 +106,7 @@ function render(){
       const team2Color=state.players[b.team2[0]];
       const trophy1=team1Color===b.winner?' 🏆':'';
       const trophy2=team2Color===b.winner?' 🏆':'';
-      html+=`<div class="beer-row"><span class="team-${team1Color}">${b.team1[0]}</span> & <span class="team-${team1Color}">${b.team1[1]}</span>${trophy1} vs <span class="team-${team2Color}">${b.team2[0]}</span> & <span class="team-${team2Color}">${b.team2[1]}</span>${trophy2} (+${pts})</div>`;
+      html+=`<div class="beer-row"><span class="team-${team1Color}"> ${b.team1[0]} </span> & <span class="team-${team1Color}"> ${b.team1[1]} </span>${trophy1} vs <span class="team-${team2Color}"> ${b.team2[0]} </span> & <span class="team-${team2Color}"> ${b.team2[1]} </span>${trophy2} (+${pts})</div>`;
     });
     html+='</div></div>';
     slides.push({color:'orange',image:bgImages.beer,html});
@@ -118,7 +118,7 @@ function render(){
     recent.forEach(b=>{
       const trophy1=b.winner===b.p1?'🏆':'';
       const trophy2=b.winner===b.p2?'🏆':'';
-      html+=`<div class="pacal-row"><span class="team-${state.players[b.p1]}">${b.p1}${trophy1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}${trophy2}</span> (+${pts})</div>`;
+      html+=`<div class="pacal-row"><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1} </span> vs <span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2} </span> (+${pts})</div>`;
     });
     html+='</div></div>';
     slides.push({color:'brown',image:bgImages.pacal,html});
@@ -132,12 +132,12 @@ function render(){
     html+='<div class="attractions-title">Atrações 🎪</div>';
     if(current){
       html+=`<div class="attractions-now-label">Agora:</div>`;
-      html+=`<div class="attractions-current">${current.name}</div>`;
+      html+=`<div class="attractions-current"> ${current.name} </div>`;
     }
     if(next){
       const diff=Math.ceil((new Date(next.time)-now)/60000);
       html+=`<div class="attractions-next-label">Em seguida</div>`;
-      html+=`<div class="attractions-next">${next.name} <span class="clock">🕒 ${diff} min</span></div>`;
+      html+=`<div class="attractions-next"> ${next.name} <span class="clock">🕒 ${diff} min</span></div>`;
     }
     html+='</div>';
     slides.push({color:'blue',image:bgImages.attractions,html});
@@ -147,7 +147,7 @@ function render(){
   let html='<div class="score-slide"><h1>Placar 🎉</h1><div class="score-chart">';
   scoreEntries.forEach(([team,score],i)=>{
     const pct=Math.round(score/maxScore*100);
-    html+=`<div class="score-row"><div class="score-bar team-${team}" style="width:${pct}%"><span class="score-name">${state.teamNames[team]}</span><span class="score-value">${score}${i==0?' 🏆':''}</span></div></div>`;
+    html+=`<div class="score-row"><div class="score-bar team-${team}" style="width:${pct}%"><span class="score-name"> ${state.teamNames[team]} </span><span class="score-value"> ${score}${i==0?' 🏆':''} </span></div></div>`;
   });
   html+='</div></div>';
   slides.push({color:'black',image:bgImages.score,html});
