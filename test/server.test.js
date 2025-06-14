@@ -131,10 +131,12 @@ describe('Express API', () => {
   it('rejects pacal duels between players of the same team', async () => {
     await request(app).post('/api/player').send({ name: 'P1', team: 'yellow' }).expect(200);
     await request(app).post('/api/player').send({ name: 'P2', team: 'yellow' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'P3', team: 'yellow' }).expect(200);
+    await request(app).post('/api/player').send({ name: 'P4', team: 'yellow' }).expect(200);
 
     await request(app)
       .post('/api/pacal')
-      .send({ p1: 'P1', p2: 'P2', winner: 'P1' })
+      .send({ team1: ['P1','P2'], team2: ['P3','P4'], winner: 'yellow' })
       .expect(400);
   });
 

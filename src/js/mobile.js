@@ -133,9 +133,11 @@ function render(){
     card.className='card pacal-card';
     let html='<h2>Pacal 🎯</h2><ul>';
     recent.forEach(b=>{
-      const trophy1=b.winner===b.p1?'🏆':'';
-      const trophy2=b.winner===b.p2?'🏆':'';
-      html+=`<li><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1} </span> vs <span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2} </span> (+${pts})</li>`;
+      const team1Color=state.players[b.team1[0]];
+      const team2Color=state.players[b.team2[0]];
+      const trophy1=b.winner===team1Color?'🏆':'';
+      const trophy2=b.winner===team2Color?'🏆':'';
+      html+=`<li><span class="team-${team1Color}"> ${b.team1[0]} </span> & <span class="team-${team1Color}"> ${b.team1[1]} </span>${trophy1} vs <span class="team-${team2Color}"> ${b.team2[0]} </span> & <span class="team-${team2Color}"> ${b.team2[1]} </span>${trophy2} (+${pts})</li>`;
     });
     html+='</ul>';
     card.innerHTML=html;

@@ -28,7 +28,7 @@ const defaultData = {
   bullFinished: false,
   cottonWars: [], // {p1, p2, winner}
   beerPongs: [], // {team1:[a,b], team2:[c,d], winner:team}
-  pacalWars: [], // {p1,p2,winner}
+  pacalWars: [], // {team1:[a,b], team2:[c,d], winner:team}
   bingoWinners: null, // {first,second,third}
   attractions: [], // {time, name}
   teamNames: {blue: 'Azul', yellow: 'Amarelo'},
@@ -103,7 +103,7 @@ function computeScores() {
     if(team) data.scores[team] += data.points.beerWin;
   });
   data.pacalWars.forEach(b=>{
-    const team = data.players[b.winner];
+    const team = b.winner; // winner is stored as team
     if(team) data.scores[team] += data.points.pacalWin;
   });
   if(data.bingoWinners){
@@ -156,9 +156,8 @@ app.put('/api/player/:name', (req,res)=>{
       b.team2 = b.team2.map(p => p === oldName ? name : p);
     });
     data.pacalWars.forEach(r => {
-      if(r.p1 === oldName) r.p1 = name;
-      if(r.p2 === oldName) r.p2 = name;
-      if(r.winner === oldName) r.winner = name;
+      r.team1 = r.team1.map(p => p === oldName ? name : p);
+      r.team2 = r.team2.map(p => p === oldName ? name : p);
     });
     if (data.bingoWinners) {
       if(data.bingoWinners.first === oldName) data.bingoWinners.first = name;
@@ -287,9 +286,11 @@ app.delete('/api/beer/:index', (req,res)=>{
 });
 
 app.post('/api/pacal', (req,res)=>{
-  const {p1,p2,winner} = req.body;
-  if(!p1 || !p2 || p1===p2 || sameTeam(p1,p2)) return res.status(400).end();
-  data.pacalWars.push({p1,p2,winner});
+  const {team1,team2,winner} = req.body;
+  if(!team1 || !team2 || team1.length!==2 || team2.length!==2) return res.status(400).end();
+  if(team1[0]===team1[1] || team2[0]===team2[1]) return res.status(400).end();
+  if(!sameTeam(team1[0],team1[1]) || !sameTeam(team2[0],team2[1]) || sameTeam(team1[0],team2[0])) return res.status(400).end();
+  data.pacalWars.push({team1,team2,winner});
   saveData();
   res.end();
 });
@@ -297,9 +298,11 @@ app.post('/api/pacal', (req,res)=>{
 app.put('/api/pacal/:index', (req,res)=>{
   const idx = parseInt(req.params.index,10);
   if(Number.isNaN(idx) || !data.pacalWars[idx]) return res.status(404).end();
-  const {p1,p2,winner} = req.body;
-  if(!p1 || !p2 || p1===p2 || sameTeam(p1,p2)) return res.status(400).end();
-  data.pacalWars[idx] = {p1,p2,winner};
+  const {team1,team2,winner} = req.body;
+  if(!team1 || !team2 || team1.length!==2 || team2.length!==2) return res.status(400).end();
+  if(team1[0]===team1[1] || team2[0]===team2[1]) return res.status(400).end();
+  if(!sameTeam(team1[0],team1[1]) || !sameTeam(team2[0],team2[1]) || sameTeam(team1[0],team2[0])) return res.status(400).end();
+  data.pacalWars[idx] = {team1,team2,winner};
   saveData();
   res.end();
 });

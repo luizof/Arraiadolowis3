@@ -116,9 +116,11 @@ function render(){
     const recent = state.pacalWars.slice().reverse();
     let html='<div class="pacal-slide"><h1>Pacal 🎯</h1><div class="pacal-wrapper">';
     recent.forEach(b=>{
-      const trophy1=b.winner===b.p1?'🏆':'';
-      const trophy2=b.winner===b.p2?'🏆':'';
-      html+=`<div class="pacal-row"><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1}</span><span class="vs">vs</span><span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2}</span> <span class="mono">(<span class="points">+${pts}</span>)</span></div>`;
+      const team1Color=state.players[b.team1[0]];
+      const team2Color=state.players[b.team2[0]];
+      const trophy1=team1Color===b.winner?'🏆':'';
+      const trophy2=team2Color===b.winner?'🏆':'';
+      html+=`<div class="pacal-row"><span class="team-${team1Color}"> ${b.team1[0]} </span> & <span class="team-${team1Color}"> ${b.team1[1]} </span>${trophy1}<span class="vs">vs</span><span class="team-${team2Color}"> ${b.team2[0]} </span> & <span class="team-${team2Color}"> ${b.team2[1]} </span>${trophy2} <span class="mono">(<span class="points">+${pts}</span>)</span></div>`;
     });
     html+='</div></div>';
     slides.push({color:'brown',image:bgImages.pacal,html});
