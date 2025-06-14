@@ -9,23 +9,43 @@ body{font-family:'Trebuchet MS',sans-serif;padding:10px;max-width:480px;margin:a
 label{display:block;margin-top:10px;}
 input{width:100%;box-sizing:border-box;margin-top:5px;padding:8px;font-size:16px;}
 button{margin-top:10px;padding:8px 12px;font-size:16px;}
+section{margin-top:20px;border-top:1px solid #ccc;padding-top:10px;}
 </style>
 </head>
 <body>
 <h1>Editar Pontos</h1>
-<div>
-<label>1º lugar Touro <input id="bullFirst" type="number"></label>
-<label>2º lugar Touro <input id="bullSecond" type="number"></label>
-<label>3º lugar Touro <input id="bullThird" type="number"></label>
-<label>4º lugar Touro <input id="bullFourth" type="number"></label>
-<label>5º lugar Touro <input id="bullFifth" type="number"></label>
-<label>1º lugar Bingo <input id="bingoFirst" type="number"></label>
-<label>2º lugar Bingo <input id="bingoSecond" type="number"></label>
-<label>Vitória Beer Pong <input id="beerWin" type="number"></label>
-<label>Vitória Cotonete <input id="cottonWin" type="number"></label>
-<label>Vitória Pacal <input id="pacalWin" type="number"></label>
+<section>
+<h2>Touro Mecânico</h2>
+<label>1º lugar <input id="bullFirst" type="number"></label>
+<label>2º lugar <input id="bullSecond" type="number"></label>
+<label>3º lugar <input id="bullThird" type="number"></label>
+<label>4º lugar <input id="bullFourth" type="number"></label>
+<label>5º lugar <input id="bullFifth" type="number"></label>
+</section>
+
+<section>
+<h2>Bingo</h2>
+<label>1º lugar <input id="bingoFirst" type="number"></label>
+<label>2º lugar <input id="bingoSecond" type="number"></label>
+<label>3º lugar <input id="bingoThird" type="number"></label>
+</section>
+
+<section>
+<h2>Beer Pong</h2>
+<label>Vitória <input id="beerWin" type="number"></label>
+</section>
+
+<section>
+<h2>Cotonete</h2>
+<label>Vitória <input id="cottonWin" type="number"></label>
+</section>
+
+<section>
+<h2>Pacal</h2>
+<label>Vitória <input id="pacalWin" type="number"></label>
+</section>
+
 <button onclick="savePoints()">Salvar</button>
-</div>
 <script>
 function loadPoints(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
@@ -37,6 +57,7 @@ function loadPoints(){
     bullFifth.value=p.bullFifth||0;
     bingoFirst.value=p.bingoFirst||0;
     bingoSecond.value=p.bingoSecond||0;
+    bingoThird.value=p.bingoThird||0;
     beerWin.value=p.beerWin||0;
     cottonWin.value=p.cottonWin||0;
     pacalWin.value=p.pacalWin||0;
@@ -51,6 +72,7 @@ function savePoints(){
     bullFifth:bullFifth.value,
     bingoFirst:bingoFirst.value,
     bingoSecond:bingoSecond.value,
+    bingoThird:bingoThird.value,
     beerWin:beerWin.value,
     cottonWin:cottonWin.value,
     pacalWin:pacalWin.value
