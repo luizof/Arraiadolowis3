@@ -46,7 +46,7 @@ function render(){
   const slides=[];
     if(state.bullTimes.length>0){
       const keys=['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
-      const sorted=[...state.bullTimes].sort((a,b)=>a.time-b.time).slice(0,10);
+      const sorted=[...state.bullTimes].sort((a,b)=>b.time-a.time).slice(0,10);
       let html='<div class="bull-slide">';
       html+='<div class="bull-title">Top Touro 🐂</div>';
       html+='<table class="bull-table">';

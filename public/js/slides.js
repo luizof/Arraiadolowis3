@@ -27,7 +27,7 @@ if (!document.querySelector) {
     if (state.bullTimes.length > 0) {
       var keys = ['bullFirst', 'bullSecond', 'bullThird', 'bullFourth', 'bullFifth'];
       var sorted = _toConsumableArray(state.bullTimes).sort(function (a, b) {
-        return a.time - b.time;
+        return b.time - a.time;
       }).slice(0, 10);
       var _html = '<div class="bull-slide">';
       _html += '<div class="bull-title">Top Touro 🐂</div>';

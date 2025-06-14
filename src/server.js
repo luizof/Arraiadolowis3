@@ -74,7 +74,7 @@ function computeScores() {
   data.scores = {blue:0, yellow:0};
   if (data.bullFinished && data.bullTimes.length > 0) {
     const keys = ['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
-    const sorted = [...data.bullTimes].sort((a,b)=>a.time-b.time).slice(0, keys.length);
+    const sorted = [...data.bullTimes].sort((a,b)=>b.time-a.time).slice(0, keys.length);
     sorted.forEach((r,i)=>{
       const k = keys[i];
       const team = data.players[r.name];
