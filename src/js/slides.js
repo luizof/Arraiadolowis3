@@ -113,7 +113,7 @@ function render(){
   }
   if(state.pacalWars.length>0){
     const pts = state.points.pacalWin || 0;
-    const recent = state.pacalWars.slice().reverse();
+    const recent = state.pacalWars.slice(-6).reverse();
     let html='<div class="pacal-slide"><h1>Pacal 🎯</h1><div class="pacal-wrapper">';
     recent.forEach(b=>{
       const team1Color=state.players[b.team1[0]];
