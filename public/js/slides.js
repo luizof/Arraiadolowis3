@@ -217,55 +217,30 @@ if (!document.querySelector) {
     render();
   };
   var fetchState = function fetchState() {
-    var doFetch = window.fetch ? window.fetch : function (url) {
-      return new Promise(function (resolve, reject) {
-        try {
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', url);
-          xhr.onload = function () {
-            resolve({
-              json: function json() {
-                return Promise.resolve(JSON.parse(xhr.responseText));
-              }
-            });
-          };
-          xhr.onerror = reject;
-          xhr.send();
-        } catch (e) {
-          reject(e);
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/api/state');
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          try {
+            updateAndRender(JSON.parse(xhr.responseText));
+          } catch (e) {
+            console.error('Erro ao analisar state', e);
+          }
         }
-      });
-    };
-    doFetch('/api/state').then(function (r) {
-      return r.json();
-    }).then(updateAndRender)["catch"](function (err) {
-      return console.error('Polling failed', err);
-    });
+      };
+      xhr.onerror = function (err) {
+        console.error('Falha no polling', err);
+      };
+      xhr.send();
+    } catch (e) {
+      console.error('Polling exception', e);
+    }
   };
   var startPolling = function startPolling() {
     clearInterval(pollTimer);
     fetchState();
     pollTimer = setInterval(fetchState, 5000);
-  };
-  var startWebSocket = function startWebSocket() {
-    if (!window.WebSocket) {
-      console.warn("WebSocket indispon\xEDvel, iniciando polling");
-      startPolling();
-      return;
-    }
-    var proto = location.protocol === 'https:' ? 'wss' : 'ws';
-    var ws = new WebSocket("".concat(proto, "://").concat(location.host));
-    ws.onmessage = function (e) {
-      updateAndRender(JSON.parse(e.data));
-    };
-    ws.onerror = function () {
-      console.warn('WebSocket erro, alternando para polling');
-      startPolling();
-    };
-    ws.onclose = function () {
-      console.warn('WebSocket fechado, alternando para polling');
-      startPolling();
-    };
   };
   var slidesEl = document.getElementById('slides');
   var defaultState = {
@@ -312,5 +287,5 @@ if (!document.querySelector) {
     score: 'backgrounds/score.jpg'
   };
   render();
-  startWebSocket();
+  startPolling();
 }

@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const WebSocket = require('ws');
 const path = require('path');
 const fs = require('fs');
 
@@ -375,19 +374,7 @@ function startServer() {
   const server = app.listen(port, () => {
     console.log('Server listening on', port);
   });
-
-  const wss = new WebSocket.Server({ server });
-  wss.on('connection', ws => {
-    computeScores();
-    ws.send(JSON.stringify(data));
-  });
-  function broadcast() {
-    computeScores();
-    const msg = JSON.stringify(data);
-    wss.clients.forEach(c => c.readyState === WebSocket.OPEN && c.send(msg));
-  }
-  setInterval(broadcast, 5000);
-  return { server, wss };
+  return { server };
 }
 
 if (require.main === module) {
