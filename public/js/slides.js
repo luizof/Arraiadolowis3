@@ -132,9 +132,11 @@ if (!document.querySelector) {
       var _recent2 = state.pacalWars.slice().reverse();
       var _html5 = '<div class="pacal-slide"><h1>Pacal 🎯</h1><div class="pacal-wrapper">';
       _recent2.forEach(function (b) {
-        var trophy1 = b.winner === b.p1 ? '🏆' : '';
-        var trophy2 = b.winner === b.p2 ? '🏆' : '';
-        _html5 += "<div class=\"pacal-row\"><span class=\"team-".concat(state.players[b.p1], "\"> ").concat(b.p1).concat(trophy1, "</span><span class=\"vs\">vs</span><span class=\"team-").concat(state.players[b.p2], "\"> ").concat(b.p2).concat(trophy2, "</span> <span class=\"mono\">(<span class=\"points\">+").concat(_pts3, "</span>)</span></div>");
+        var team1Color = state.players[b.team1[0]];
+        var team2Color = state.players[b.team2[0]];
+        var trophy1 = team1Color === b.winner ? '🏆' : '';
+        var trophy2 = team2Color === b.winner ? '🏆' : '';
+        _html5 += "<div class=\"pacal-row\"><span class=\"team-".concat(team1Color, "\"> ").concat(b.team1[0], " </span> & <span class=\"team-").concat(team1Color, "\"> ").concat(b.team1[1], " </span>").concat(trophy1, "<span class=\"vs\">vs</span><span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[0], " </span> & <span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[1], " </span>").concat(trophy2, " <span class=\"mono\">(<span class=\"points\">+").concat(_pts3, "</span>)</span></div>");
       });
       _html5 += '</div></div>';
       slides.push({

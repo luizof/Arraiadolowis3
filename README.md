@@ -10,7 +10,7 @@ This project provides a simple slide show and admin panel for a local party scor
   2. **Cotonete battles** history displaying the winner with a trophy.
   3. **Bingo** first, second and third place (only appears when data is entered).
   4. **Beer Pong** battle history with two players on each side and the winner.
-  5. **Pacal** battle history.
+  5. **Pacal** doubles battle history.
   6. **Current and next attraction** based on the schedule, including a countdown.
   7. **Overall team score** using a horizontal bar chart with the winning team on top and a trophy.
   - Slides use custom background images. Place image files in `public/backgrounds` with the following names so they load automatically:

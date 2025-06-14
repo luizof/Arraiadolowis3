@@ -150,9 +150,11 @@ if (!document.querySelector) {
       _card4.className = 'card pacal-card';
       var _html5 = '<h2>Pacal 🎯</h2><ul>';
       _recent2.forEach(function (b) {
-        var trophy1 = b.winner === b.p1 ? '🏆' : '';
-        var trophy2 = b.winner === b.p2 ? '🏆' : '';
-        _html5 += "<li><span class=\"team-".concat(state.players[b.p1], "\"> ").concat(b.p1).concat(trophy1, " </span> vs <span class=\"team-").concat(state.players[b.p2], "\"> ").concat(b.p2).concat(trophy2, " </span> (+").concat(_pts2, ")</li>");
+        var team1Color = state.players[b.team1[0]];
+        var team2Color = state.players[b.team2[0]];
+        var trophy1 = b.winner === team1Color ? '🏆' : '';
+        var trophy2 = b.winner === team2Color ? '🏆' : '';
+        _html5 += "<li><span class=\"team-".concat(team1Color, "\"> ").concat(b.team1[0], " </span> & <span class=\"team-").concat(team1Color, "\"> ").concat(b.team1[1], " </span>").concat(trophy1, " vs <span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[0], " </span> & <span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[1], " </span>").concat(trophy2, " (+").concat(_pts2, ")</li>");
       });
       _html5 += '</ul>';
       _card4.innerHTML = _html5;
