@@ -145,7 +145,7 @@ if (!document.querySelector) {
     }
     if (state.pacalWars.length > 0) {
       var _pts2 = state.points.pacalWin || 0;
-      var _recent2 = state.pacalWars.slice().reverse();
+      var _recent2 = state.pacalWars.slice(-6).reverse();
       var _card4 = document.createElement('div');
       _card4.className = 'card pacal-card';
       var _html5 = '<h2>Pacal 🎯</h2><ul>';

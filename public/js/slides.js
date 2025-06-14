@@ -129,7 +129,7 @@ if (!document.querySelector) {
     }
     if (state.pacalWars.length > 0) {
       var _pts3 = state.points.pacalWin || 0;
-      var _recent2 = state.pacalWars.slice().reverse();
+      var _recent2 = state.pacalWars.slice(-6).reverse();
       var _html5 = '<div class="pacal-slide"><h1>Pacal 🎯</h1><div class="pacal-wrapper">';
       _recent2.forEach(function (b) {
         var team1Color = state.players[b.team1[0]];

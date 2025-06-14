@@ -128,7 +128,7 @@ function render(){
   }
   if(state.pacalWars.length>0){
     const pts=state.points.pacalWin||0;
-    const recent=state.pacalWars.slice().reverse();
+    const recent=state.pacalWars.slice(-6).reverse();
     const card=document.createElement('div');
     card.className='card pacal-card';
     let html='<h2>Pacal 🎯</h2><ul>';
