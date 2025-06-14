@@ -29,7 +29,7 @@ if (!document.querySelector) {
       }).slice(0, 5);
       var _card = document.createElement('div');
       _card.className = 'card bull-card';
-      var _html = '<h2>Top Touro 🐂</h2><ol>';
+      var _html = '<h2>Touro Mecânico 🐂</h2><ol>';
       sorted.forEach(function (r, i) {
         var pts = i < keys.length ? state.points[keys[i]] || 0 : 0;
         _html += "<li><span class=\"team-".concat(state.players[r.name], "\">").concat(r.name, "</span> - ").concat(r.time, "s (").concat(pts, " pts)").concat(i == 0 ? ' 🏆' : '', "</li>");

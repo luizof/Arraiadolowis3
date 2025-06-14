@@ -30,7 +30,7 @@ if (!document.querySelector) {
         return b.time - a.time;
       }).slice(0, 10);
       var _html = '<div class="bull-slide">';
-      _html += '<div class="bull-title">Top Touro 🐂</div>';
+      _html += '<div class="bull-title">Touro Mecânico 🐂</div>';
       _html += '<table class="bull-table">';
       for (var row = 0; row < 5; row++) {
         _html += '<tr>';

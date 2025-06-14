@@ -14,7 +14,7 @@ This project provides a simple slide show and admin panel for a local party scor
   6. **Current and next attraction** based on the schedule, including a countdown.
   7. **Overall team score** using a horizontal bar chart with the winning team on top and a trophy.
   - Slides use custom background images. Place image files in `public/backgrounds` with the following names so they load automatically:
-    - `bull.jpg` - Top Touro
+    - `bull.jpg` - Touro Mecânico
     - `cotton.jpg` - Guerra de Cotonete
     - `bingo.jpg` - Bingo
     - `beer.jpg` - Beer Pong
