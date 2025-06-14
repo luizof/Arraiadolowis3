@@ -3,7 +3,32 @@ if(!document.querySelector){
   console.warn('Navegador sem suporte: querySelector ausente');
 }else{
 const slidesEl=document.getElementById('slides');
-let state={};
+const defaultState={
+  players:{},
+  bullTimes:[],
+  bullFinished:false,
+  cottonWars:[],
+  beerPongs:[],
+  pacalWars:[],
+  bingoWinners:null,
+  attractions:[],
+  teamNames:{blue:'Azul',yellow:'Amarelo'},
+  points:{
+    bullFirst:20,
+    bullSecond:10,
+    bullThird:5,
+    bullFourth:3,
+    bullFifth:1,
+    cottonWin:3,
+    beerWin:3,
+    pacalWin:3,
+    bingoFirst:5,
+    bingoSecond:3,
+    bingoThird:1
+  },
+  scores:{blue:0,yellow:0}
+};
+let state={...defaultState};
 let timer;
 let pollTimer;
 const bgImages={
@@ -178,5 +203,6 @@ function startWebSocket(){
   ws.onclose=()=>{console.warn('WebSocket fechado, alternando para polling');startPolling();};
 }
 
+render();
 startWebSocket();
 }
