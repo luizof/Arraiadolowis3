@@ -141,10 +141,10 @@ function render(){
   }
   const scoreEntries=Object.entries(state.scores).sort((a,b)=>b[1]-a[1]);
   const maxScore=Math.max(...scoreEntries.map(s=>s[1]),1);
-  let html='<div class="score-slide"><h1>Placar</h1><div class="score-chart">';
+  let html='<div class="score-slide"><h1>Placar 🎉</h1><div class="score-chart">';
   scoreEntries.forEach(([team,score],i)=>{
     const pct=Math.round(score/maxScore*100);
-    html+=`<div class="score-row"><div class="team-label">${state.teamNames[team]}</div><div class="score-bar team-${team}" style="width:${pct}%"><span class="score-value">${score}${i==0?' 🏆':''}</span></div></div>`;
+    html+=`<div class="score-row"><div class="score-bar team-${team}" style="width:${pct}%"><span class="score-name">${state.teamNames[team]}</span><span class="score-value">${score}${i==0?' 🏆':''}</span></div></div>`;
   });
   html+='</div></div>';
   slides.push({color:'black',image:bgImages.score,html});
