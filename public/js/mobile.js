@@ -36,11 +36,11 @@ if (!document.querySelector) {
       });
       var html = '';
       if (current) {
-        html += "<div class=\"attractions-label\">Agora:</div><div class=\"attractions-current\">".concat(current.name, "</div>");
+        html += "<div class=\"attractions-label\">Agora:</div><div class=\"attractions-current\"> ".concat(current.name, " </div>");
       }
       if (next) {
         var diff = Math.ceil((new Date(next.time) - now) / 60000);
-        html += "<div class=\"attractions-label\">Em seguida:</div><div class=\"attractions-next\">".concat(next.name, " <span class=\"clock\">\uD83D\uDD52 ").concat(diff, " min</span></div>");
+        html += "<div class=\"attractions-label\">Em seguida:</div><div class=\"attractions-next\"> ".concat(next.name, " <span class=\"clock\">\uD83D\uDD52 ").concat(diff, " min</span></div>");
       }
       attractionsEl.innerHTML = html;
     }
@@ -58,7 +58,7 @@ if (!document.querySelector) {
         team = _ref2[0],
         score = _ref2[1];
       var pct = Math.round(score / maxScore * 100);
-      scoreHtml += "<div class=\"score-row\"><div class=\"score-bar team-".concat(team, "\" style=\"width:").concat(pct, "%\">").concat(state.teamNames[team], " - ").concat(score).concat(i == 0 ? ' 🏆' : '', "</div></div>");
+      scoreHtml += "<div class=\"score-row\"><div class=\"score-bar team-".concat(team, "\" style=\"width:").concat(pct, "%\"> ").concat(state.teamNames[team], " - ").concat(score).concat(i == 0 ? ' 🏆' : '', " </div></div>");
     });
     scoreCard.innerHTML = scoreHtml;
     container.appendChild(scoreCard);
@@ -72,7 +72,7 @@ if (!document.querySelector) {
       var _html = '<h2>Touro Mecânico 🐂</h2><ol>';
       sorted.forEach(function (r, i) {
         var pts = i < keys.length ? state.points[keys[i]] || 0 : 0;
-        _html += "<li><span class=\"team-".concat(state.players[r.name], "\">").concat(r.name, "</span> - ").concat(r.time, "s (").concat(pts, " pts)").concat(i == 0 ? ' 🏆' : '', "</li>");
+        _html += "<li><span class=\"team-".concat(state.players[r.name], "\"> ").concat(r.name, " </span> - ").concat(r.time, "s (").concat(pts, " pts)").concat(i == 0 ? ' 🏆' : '', "</li>");
       });
       _html += '</ol>';
       card.innerHTML = _html;
@@ -92,7 +92,7 @@ if (!document.querySelector) {
           hour: '2-digit',
           minute: '2-digit'
         }) : '';
-        _html2 += "<li><span class=\"team-".concat(state.players[b.p1], "\">").concat(b.p1).concat(trophy1, "</span> vs <span class=\"team-").concat(state.players[b.p2], "\">").concat(b.p2).concat(trophy2, "</span> (+").concat(pts, ") <small>").concat(time, "</small></li>");
+        _html2 += "<li><span class=\"team-".concat(state.players[b.p1], "\"> ").concat(b.p1).concat(trophy1, " </span> vs <span class=\"team-").concat(state.players[b.p2], "\"> ").concat(b.p2).concat(trophy2, " </span> (+").concat(pts, ") <small>").concat(time, "</small></li>");
       });
       _html2 += '</ul>';
       _card.innerHTML = _html2;
@@ -118,7 +118,7 @@ if (!document.querySelector) {
       }];
       rows.forEach(function (r, i) {
         var pts = state.points[r.key] || 0;
-        _html3 += "<li>".concat(r.pos, " <span class=\"team-").concat(state.players[r.name], "\">").concat(r.name || '', "</span> (").concat(pts, " pts) ").concat(r.trophy || '', "</li>");
+        _html3 += "<li>".concat(r.pos, " <span class=\"team-").concat(state.players[r.name], "\"> ").concat(r.name || '', " </span> (").concat(pts, " pts) ").concat(r.trophy || '', "</li>");
       });
       _html3 += '</ol>';
       _card2.innerHTML = _html3;
@@ -135,7 +135,7 @@ if (!document.querySelector) {
         var team2Color = state.players[b.team2[0]];
         var trophy1 = b.winner === team1Color ? '🏆' : '';
         var trophy2 = b.winner === team2Color ? '🏆' : '';
-        _html4 += "<li><span class=\"team-".concat(team1Color, "\">").concat(b.team1[0], "</span> & <span class=\"team-").concat(team1Color, "\">").concat(b.team1[1], "</span>").concat(trophy1, " vs <span class=\"team-").concat(team2Color, "\">").concat(b.team2[0], "</span> & <span class=\"team-").concat(team2Color, "\">").concat(b.team2[1], "</span>").concat(trophy2, " (+").concat(_pts, ")</li>");
+        _html4 += "<li><span class=\"team-".concat(team1Color, "\"> ").concat(b.team1[0], " </span> & <span class=\"team-").concat(team1Color, "\"> ").concat(b.team1[1], " </span>").concat(trophy1, " vs <span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[0], " </span> & <span class=\"team-").concat(team2Color, "\"> ").concat(b.team2[1], " </span>").concat(trophy2, " (+").concat(_pts, ")</li>");
       });
       _html4 += '</ul>';
       _card3.innerHTML = _html4;
@@ -150,7 +150,7 @@ if (!document.querySelector) {
       _recent2.forEach(function (b) {
         var trophy1 = b.winner === b.p1 ? '🏆' : '';
         var trophy2 = b.winner === b.p2 ? '🏆' : '';
-        _html5 += "<li><span class=\"team-".concat(state.players[b.p1], "\">").concat(b.p1).concat(trophy1, "</span> vs <span class=\"team-").concat(state.players[b.p2], "\">").concat(b.p2).concat(trophy2, "</span> (+").concat(_pts2, ")</li>");
+        _html5 += "<li><span class=\"team-".concat(state.players[b.p1], "\"> ").concat(b.p1).concat(trophy1, " </span> vs <span class=\"team-").concat(state.players[b.p2], "\"> ").concat(b.p2).concat(trophy2, " </span> (+").concat(_pts2, ")</li>");
       });
       _html5 += '</ul>';
       _card4.innerHTML = _html5;

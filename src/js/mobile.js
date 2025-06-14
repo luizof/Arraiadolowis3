@@ -41,11 +41,11 @@ function render(){
     const next=attractions.find(a=> new Date(a.time)>now);
     let html='';
     if(current){
-      html+=`<div class="attractions-label">Agora:</div><div class="attractions-current">${current.name}</div>`;
+      html+=`<div class="attractions-label">Agora:</div><div class="attractions-current"> ${current.name} </div>`;
     }
     if(next){
       const diff=Math.ceil((new Date(next.time)-now)/60000);
-      html+=`<div class="attractions-label">Em seguida:</div><div class="attractions-next">${next.name} <span class="clock">🕒 ${diff} min</span></div>`;
+      html+=`<div class="attractions-label">Em seguida:</div><div class="attractions-next"> ${next.name} <span class="clock">🕒 ${diff} min</span></div>`;
     }
     attractionsEl.innerHTML=html;
   }
@@ -57,7 +57,7 @@ function render(){
   let scoreHtml='<h2>Placar 🏆</h2>';
   scoreEntries.forEach(([team,score],i)=>{
     const pct=Math.round(score/maxScore*100);
-    scoreHtml+=`<div class="score-row"><div class="score-bar team-${team}" style="width:${pct}%">${state.teamNames[team]} - ${score}${i==0?' 🏆':''}</div></div>`;
+    scoreHtml+=`<div class="score-row"><div class="score-bar team-${team}" style="width:${pct}%"> ${state.teamNames[team]} - ${score}${i==0?' 🏆':''} </div></div>`;
   });
   scoreCard.innerHTML=scoreHtml;
   container.appendChild(scoreCard);
@@ -69,7 +69,7 @@ function render(){
     let html='<h2>Touro Mecânico 🐂</h2><ol>';
     sorted.forEach((r,i)=>{
       const pts=i<keys.length?state.points[keys[i]]||0:0;
-      html+=`<li><span class="team-${state.players[r.name]}">${r.name}</span> - ${r.time}s (${pts} pts)${i==0?' 🏆':''}</li>`;
+      html+=`<li><span class="team-${state.players[r.name]}"> ${r.name} </span> - ${r.time}s (${pts} pts)${i==0?' 🏆':''}</li>`;
     });
     html+='</ol>';
     card.innerHTML=html;
@@ -86,7 +86,7 @@ function render(){
       const trophy1=b.winner===b.p1?'🏆':'';
       const trophy2=b.winner===b.p2?'🏆':'';
       const time=b.time?new Date(b.time).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
-      html+=`<li><span class="team-${state.players[b.p1]}">${b.p1}${trophy1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}${trophy2}</span> (+${pts}) <small>${time}</small></li>`;
+      html+=`<li><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1} </span> vs <span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2} </span> (+${pts}) <small>${time}</small></li>`;
     });
     html+='</ul>';
     card.innerHTML=html;
@@ -103,7 +103,7 @@ function render(){
     ];
     rows.forEach((r,i)=>{
       const pts=state.points[r.key]||0;
-      html+=`<li>${r.pos} <span class="team-${state.players[r.name]}">${r.name||''}</span> (${pts} pts) ${r.trophy||''}</li>`;
+      html+=`<li>${r.pos} <span class="team-${state.players[r.name]}"> ${r.name||''} </span> (${pts} pts) ${r.trophy||''}</li>`;
     });
     html+='</ol>';
     card.innerHTML=html;
@@ -120,7 +120,7 @@ function render(){
       const team2Color=state.players[b.team2[0]];
       const trophy1=b.winner===team1Color?'🏆':'';
       const trophy2=b.winner===team2Color?'🏆':'';
-      html+=`<li><span class="team-${team1Color}">${b.team1[0]}</span> & <span class="team-${team1Color}">${b.team1[1]}</span>${trophy1} vs <span class="team-${team2Color}">${b.team2[0]}</span> & <span class="team-${team2Color}">${b.team2[1]}</span>${trophy2} (+${pts})</li>`;
+      html+=`<li><span class="team-${team1Color}"> ${b.team1[0]} </span> & <span class="team-${team1Color}"> ${b.team1[1]} </span>${trophy1} vs <span class="team-${team2Color}"> ${b.team2[0]} </span> & <span class="team-${team2Color}"> ${b.team2[1]} </span>${trophy2} (+${pts})</li>`;
     });
     html+='</ul>';
     card.innerHTML=html;
@@ -135,7 +135,7 @@ function render(){
     recent.forEach(b=>{
       const trophy1=b.winner===b.p1?'🏆':'';
       const trophy2=b.winner===b.p2?'🏆':'';
-      html+=`<li><span class="team-${state.players[b.p1]}">${b.p1}${trophy1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}${trophy2}</span> (+${pts})</li>`;
+      html+=`<li><span class="team-${state.players[b.p1]}"> ${b.p1}${trophy1} </span> vs <span class="team-${state.players[b.p2]}"> ${b.p2}${trophy2} </span> (+${pts})</li>`;
     });
     html+='</ul>';
     card.innerHTML=html;
