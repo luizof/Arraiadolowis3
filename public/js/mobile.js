@@ -131,7 +131,7 @@ if (!document.querySelector) {
       var _recent = state.beerPongs.slice().reverse();
       var _card3 = document.createElement('div');
       _card3.className = 'card beer-card';
-      var _html4 = '<h2>🍺 Beer Pong 🍺</h2><ul>';
+      var _html4 = '<h2>Beer Pong 🍺</h2><ul>';
       _recent.forEach(function (b) {
         var team1Color = state.players[b.team1[0]];
         var team2Color = state.players[b.team2[0]];
