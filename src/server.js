@@ -117,6 +117,7 @@ app.get('/api/players', (req,res)=>{
 app.post('/api/player', (req,res)=>{
   const {name, team} = req.body;
   if(!name || !team) return res.status(400).end();
+  if(data.players[name]) return res.status(409).end();
   data.players[name]=team;
   saveData();
   res.end();
@@ -127,6 +128,7 @@ app.put('/api/player/:name', (req,res)=>{
   if(!data.players[oldName]) return res.status(404).end();
   const {name = oldName, team} = req.body;
   if(name !== oldName){
+    if(data.players[name]) return res.status(409).end();
     data.players[name] = data.players[oldName];
     delete data.players[oldName];
 
