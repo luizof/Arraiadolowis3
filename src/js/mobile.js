@@ -37,7 +37,7 @@ function render(){
     const sorted=[...state.bullTimes].sort((a,b)=>b.time-a.time).slice(0,5);
     const card=document.createElement('div');
     card.className='card bull-card';
-    let html='<h2>Top Touro 🐂</h2><ol>';
+    let html='<h2>Touro Mecânico 🐂</h2><ol>';
     sorted.forEach((r,i)=>{
       const pts=i<keys.length?state.points[keys[i]]||0:0;
       html+=`<li><span class="team-${state.players[r.name]}">${r.name}</span> - ${r.time}s (${pts} pts)${i==0?' 🏆':''}</li>`;
