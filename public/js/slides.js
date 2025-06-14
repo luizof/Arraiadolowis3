@@ -123,11 +123,15 @@ if (!document.querySelector) {
       });
     }
     if (state.pacalWars.length > 0) {
-      var _html5 = '<h1>Pacal 🎯</h1><ul>';
-      state.pacalWars.slice(-5).forEach(function (b) {
-        _html5 += "<li><span class=\"team-".concat(state.players[b.p1], "\">").concat(b.p1, "</span> vs <span class=\"team-").concat(state.players[b.p2], "\">").concat(b.p2, "</span> \uD83C\uDFC6 <span class=\"team-").concat(state.players[b.winner], "\">").concat(b.winner, "</span></li>");
+      var _pts2 = state.points.pacalWin || 0;
+      var _recent = state.pacalWars.slice().reverse();
+      var _html5 = '<div class="pacal-slide"><h1>Pacal 🎯</h1><div class="pacal-wrapper">';
+      _recent.forEach(function (b) {
+        var trophy1 = b.winner === b.p1 ? '🏆' : '';
+        var trophy2 = b.winner === b.p2 ? '🏆' : '';
+        _html5 += "<div class=\"pacal-row\"><span class=\"team-".concat(state.players[b.p1], "\">").concat(b.p1).concat(trophy1, "</span> vs <span class=\"team-").concat(state.players[b.p2], "\">").concat(b.p2).concat(trophy2, "</span> (+").concat(_pts2, ")</div>");
       });
-      _html5 += '</ul>';
+      _html5 += '</div></div>';
       slides.push({
         color: 'brown',
         image: bgImages.pacal,
