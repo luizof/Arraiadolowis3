@@ -160,8 +160,15 @@ function render(){
 }
 
 function updateAndRender(data){
-  state=data;
-  render();
+  try{
+    const serialized=JSON.stringify(data);
+    if(serialized===updateAndRender.lastSerialized) return;
+    updateAndRender.lastSerialized=serialized;
+    state=data;
+    render();
+  }catch(e){
+    console.error('Erro ao atualizar slides', e);
+  }
 }
 
 function fetchState(){
