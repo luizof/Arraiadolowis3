@@ -109,9 +109,15 @@ function render(){
     slides.push({color:'orange',image:bgImages.beer,html});
   }
   if(state.pacalWars.length>0){
-    let html='<h1>Pacal 🎯</h1><ul>';
-    state.pacalWars.slice(-5).forEach(b=>{html+=`<li><span class="team-${state.players[b.p1]}">${b.p1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}</span> 🏆 <span class="team-${state.players[b.winner]}">${b.winner}</span></li>`});
-    html+='</ul>';
+    const pts = state.points.pacalWin || 0;
+    const recent = state.pacalWars.slice().reverse();
+    let html='<div class="pacal-slide"><h1>Pacal 🎯</h1><div class="pacal-wrapper">';
+    recent.forEach(b=>{
+      const trophy1=b.winner===b.p1?'🏆':'';
+      const trophy2=b.winner===b.p2?'🏆':'';
+      html+=`<div class="pacal-row"><span class="team-${state.players[b.p1]}">${b.p1}${trophy1}</span> vs <span class="team-${state.players[b.p2]}">${b.p2}${trophy2}</span> (+${pts})</div>`;
+    });
+    html+='</div></div>';
     slides.push({color:'brown',image:bgImages.pacal,html});
   }
   if(state.attractions.length>0){
