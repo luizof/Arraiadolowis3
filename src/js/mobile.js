@@ -3,6 +3,7 @@ if(!document.querySelector){
   console.warn('Navegador sem suporte: querySelector ausente');
 }else{
 const container=document.getElementById('cards');
+const attractionsEl=document.getElementById('attractions-info');
 const defaultState={
   players:{},
   bullTimes:[],
@@ -32,9 +33,37 @@ let state={...defaultState};
 let pollTimer;
 function render(){
   container.innerHTML='';
+  attractionsEl.innerHTML='';
+  if(state.attractions.length>0){
+    const now=new Date();
+    const attractions=[...state.attractions].sort((a,b)=>new Date(a.time)-new Date(b.time));
+    const current=attractions.filter(a=>new Date(a.time)<=now).pop();
+    const next=attractions.find(a=> new Date(a.time)>now);
+    let html='';
+    if(current){
+      html+=`<div class="attractions-label">Agora:</div><div class="attractions-current">${current.name}</div>`;
+    }
+    if(next){
+      const diff=Math.ceil((new Date(next.time)-now)/60000);
+      html+=`<div class="attractions-label">Em seguida:</div><div class="attractions-next">${next.name} <span class="clock">🕒 ${diff} min</span></div>`;
+    }
+    attractionsEl.innerHTML=html;
+  }
+
+  const scoreEntries=Object.entries(state.scores).sort((a,b)=>b[1]-a[1]);
+  const maxScore=Math.max(...scoreEntries.map(s=>s[1]),1);
+  const scoreCard=document.createElement('div');
+  scoreCard.className='card score-card';
+  let scoreHtml='<h2>Placar 🏆</h2>';
+  scoreEntries.forEach(([team,score],i)=>{
+    const pct=Math.round(score/maxScore*100);
+    scoreHtml+=`<div class="score-row"><div class="score-bar team-${team}" style="width:${pct}%">${state.teamNames[team]} - ${score}${i==0?' 🏆':''}</div></div>`;
+  });
+  scoreCard.innerHTML=scoreHtml;
+  container.appendChild(scoreCard);
   if(state.bullTimes.length>0){
     const keys=['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
-    const sorted=[...state.bullTimes].sort((a,b)=>b.time-a.time).slice(0,5);
+    const sorted=[...state.bullTimes].sort((a,b)=>b.time-a.time);
     const card=document.createElement('div');
     card.className='card bull-card';
     let html='<h2>Touro Mecânico 🐂</h2><ol>';
@@ -112,35 +141,6 @@ function render(){
     card.innerHTML=html;
     container.appendChild(card);
   }
-  if(state.attractions.length>0){
-    const now=new Date();
-    const attractions=[...state.attractions].sort((a,b)=>new Date(a.time)-new Date(b.time));
-    const current=attractions.filter(a=>new Date(a.time)<=now).pop();
-    const next=attractions.find(a=> new Date(a.time)>now);
-    const card=document.createElement('div');
-    card.className='card attractions-card';
-    let html='<h2>Atrações 🎡</h2>';
-    if(current){
-      html+=`<div>Agora: <strong>${current.name}</strong></div>`;
-    }
-    if(next){
-      const diff=Math.ceil((new Date(next.time)-now)/60000);
-      html+=`<div>Em seguida: ${next.name} <span class="clock">🕒 ${diff} min</span></div>`;
-    }
-    card.innerHTML=html;
-    container.appendChild(card);
-  }
-  const scoreEntries=Object.entries(state.scores).sort((a,b)=>b[1]-a[1]);
-  const maxScore=Math.max(...scoreEntries.map(s=>s[1]),1);
-  const card=document.createElement('div');
-  card.className='card score-card';
-  let html='<h2>Placar 🏆</h2>';
-  scoreEntries.forEach(([team,score],i)=>{
-    const pct=Math.round(score/maxScore*100);
-    html+=`<div class="score-row"><div class="score-bar team-${team}" style="width:${pct}%">${state.teamNames[team]} - ${score}${i==0?' 🏆':''}</div></div>`;
-  });
-  card.innerHTML=html;
-  container.appendChild(card);
 }
 function updateAndRender(data){
   try{

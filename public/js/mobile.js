@@ -22,27 +22,67 @@ if (!document.querySelector) {
 } else {
   var render = function render() {
     container.innerHTML = '';
+    attractionsEl.innerHTML = '';
+    if (state.attractions.length > 0) {
+      var now = new Date();
+      var attractions = _toConsumableArray(state.attractions).sort(function (a, b) {
+        return new Date(a.time) - new Date(b.time);
+      });
+      var current = attractions.filter(function (a) {
+        return new Date(a.time) <= now;
+      }).pop();
+      var next = attractions.find(function (a) {
+        return new Date(a.time) > now;
+      });
+      var html = '';
+      if (current) {
+        html += "<div class=\"attractions-label\">Agora:</div><div class=\"attractions-current\">".concat(current.name, "</div>");
+      }
+      if (next) {
+        var diff = Math.ceil((new Date(next.time) - now) / 60000);
+        html += "<div class=\"attractions-label\">Em seguida:</div><div class=\"attractions-next\">".concat(next.name, " <span class=\"clock\">\uD83D\uDD52 ").concat(diff, " min</span></div>");
+      }
+      attractionsEl.innerHTML = html;
+    }
+    var scoreEntries = Object.entries(state.scores).sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    var maxScore = Math.max.apply(Math, _toConsumableArray(scoreEntries.map(function (s) {
+      return s[1];
+    })).concat([1]));
+    var scoreCard = document.createElement('div');
+    scoreCard.className = 'card score-card';
+    var scoreHtml = '<h2>Placar 🏆</h2>';
+    scoreEntries.forEach(function (_ref, i) {
+      var _ref2 = _slicedToArray(_ref, 2),
+        team = _ref2[0],
+        score = _ref2[1];
+      var pct = Math.round(score / maxScore * 100);
+      scoreHtml += "<div class=\"score-row\"><div class=\"score-bar team-".concat(team, "\" style=\"width:").concat(pct, "%\">").concat(state.teamNames[team], " - ").concat(score).concat(i == 0 ? ' 🏆' : '', "</div></div>");
+    });
+    scoreCard.innerHTML = scoreHtml;
+    container.appendChild(scoreCard);
     if (state.bullTimes.length > 0) {
       var keys = ['bullFirst', 'bullSecond', 'bullThird', 'bullFourth', 'bullFifth'];
       var sorted = _toConsumableArray(state.bullTimes).sort(function (a, b) {
         return b.time - a.time;
-      }).slice(0, 5);
-      var _card = document.createElement('div');
-      _card.className = 'card bull-card';
+      });
+      var card = document.createElement('div');
+      card.className = 'card bull-card';
       var _html = '<h2>Touro Mecânico 🐂</h2><ol>';
       sorted.forEach(function (r, i) {
         var pts = i < keys.length ? state.points[keys[i]] || 0 : 0;
         _html += "<li><span class=\"team-".concat(state.players[r.name], "\">").concat(r.name, "</span> - ").concat(r.time, "s (").concat(pts, " pts)").concat(i == 0 ? ' 🏆' : '', "</li>");
       });
       _html += '</ol>';
-      _card.innerHTML = _html;
-      container.appendChild(_card);
+      card.innerHTML = _html;
+      container.appendChild(card);
     }
     if (state.cottonWars.length > 0) {
       var pts = state.points.cottonWin || 0;
       var recent = state.cottonWars.slice().reverse();
-      var _card2 = document.createElement('div');
-      _card2.className = 'card cotton-card';
+      var _card = document.createElement('div');
+      _card.className = 'card cotton-card';
       var _html2 = '<h2>Guerra de Cotonete ⚔️</h2>';
       _html2 += '<ul>';
       recent.forEach(function (b) {
@@ -55,12 +95,12 @@ if (!document.querySelector) {
         _html2 += "<li><span class=\"team-".concat(state.players[b.p1], "\">").concat(b.p1).concat(trophy1, "</span> vs <span class=\"team-").concat(state.players[b.p2], "\">").concat(b.p2).concat(trophy2, "</span> (+").concat(pts, ") <small>").concat(time, "</small></li>");
       });
       _html2 += '</ul>';
-      _card2.innerHTML = _html2;
-      container.appendChild(_card2);
+      _card.innerHTML = _html2;
+      container.appendChild(_card);
     }
     if (state.bingoWinners) {
-      var _card3 = document.createElement('div');
-      _card3.className = 'card bingo-card';
+      var _card2 = document.createElement('div');
+      _card2.className = 'card bingo-card';
       var _html3 = '<h2>Bingo 🎉</h2><ol>';
       var rows = [{
         name: state.bingoWinners.first,
@@ -81,14 +121,14 @@ if (!document.querySelector) {
         _html3 += "<li>".concat(r.pos, " <span class=\"team-").concat(state.players[r.name], "\">").concat(r.name || '', "</span> (").concat(pts, " pts) ").concat(r.trophy || '', "</li>");
       });
       _html3 += '</ol>';
-      _card3.innerHTML = _html3;
-      container.appendChild(_card3);
+      _card2.innerHTML = _html3;
+      container.appendChild(_card2);
     }
     if (state.beerPongs.length > 0) {
       var _pts = state.points.beerWin || 0;
       var _recent = state.beerPongs.slice().reverse();
-      var _card4 = document.createElement('div');
-      _card4.className = 'card beer-card';
+      var _card3 = document.createElement('div');
+      _card3.className = 'card beer-card';
       var _html4 = '<h2>🍺 Beer Pong 🍺</h2><ul>';
       _recent.forEach(function (b) {
         var team1Color = state.players[b.team1[0]];
@@ -98,14 +138,14 @@ if (!document.querySelector) {
         _html4 += "<li><span class=\"team-".concat(team1Color, "\">").concat(b.team1[0], "</span> & <span class=\"team-").concat(team1Color, "\">").concat(b.team1[1], "</span>").concat(trophy1, " vs <span class=\"team-").concat(team2Color, "\">").concat(b.team2[0], "</span> & <span class=\"team-").concat(team2Color, "\">").concat(b.team2[1], "</span>").concat(trophy2, " (+").concat(_pts, ")</li>");
       });
       _html4 += '</ul>';
-      _card4.innerHTML = _html4;
-      container.appendChild(_card4);
+      _card3.innerHTML = _html4;
+      container.appendChild(_card3);
     }
     if (state.pacalWars.length > 0) {
       var _pts2 = state.points.pacalWin || 0;
       var _recent2 = state.pacalWars.slice().reverse();
-      var _card5 = document.createElement('div');
-      _card5.className = 'card pacal-card';
+      var _card4 = document.createElement('div');
+      _card4.className = 'card pacal-card';
       var _html5 = '<h2>Pacal 🎯</h2><ul>';
       _recent2.forEach(function (b) {
         var trophy1 = b.winner === b.p1 ? '🏆' : '';
@@ -113,51 +153,9 @@ if (!document.querySelector) {
         _html5 += "<li><span class=\"team-".concat(state.players[b.p1], "\">").concat(b.p1).concat(trophy1, "</span> vs <span class=\"team-").concat(state.players[b.p2], "\">").concat(b.p2).concat(trophy2, "</span> (+").concat(_pts2, ")</li>");
       });
       _html5 += '</ul>';
-      _card5.innerHTML = _html5;
-      container.appendChild(_card5);
+      _card4.innerHTML = _html5;
+      container.appendChild(_card4);
     }
-    if (state.attractions.length > 0) {
-      var now = new Date();
-      var attractions = _toConsumableArray(state.attractions).sort(function (a, b) {
-        return new Date(a.time) - new Date(b.time);
-      });
-      var current = attractions.filter(function (a) {
-        return new Date(a.time) <= now;
-      }).pop();
-      var next = attractions.find(function (a) {
-        return new Date(a.time) > now;
-      });
-      var _card6 = document.createElement('div');
-      _card6.className = 'card attractions-card';
-      var _html6 = '<h2>Atrações 🎡</h2>';
-      if (current) {
-        _html6 += "<div>Agora: <strong>".concat(current.name, "</strong></div>");
-      }
-      if (next) {
-        var diff = Math.ceil((new Date(next.time) - now) / 60000);
-        _html6 += "<div>Em seguida: ".concat(next.name, " <span class=\"clock\">\uD83D\uDD52 ").concat(diff, " min</span></div>");
-      }
-      _card6.innerHTML = _html6;
-      container.appendChild(_card6);
-    }
-    var scoreEntries = Object.entries(state.scores).sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    var maxScore = Math.max.apply(Math, _toConsumableArray(scoreEntries.map(function (s) {
-      return s[1];
-    })).concat([1]));
-    var card = document.createElement('div');
-    card.className = 'card score-card';
-    var html = '<h2>Placar 🏆</h2>';
-    scoreEntries.forEach(function (_ref, i) {
-      var _ref2 = _slicedToArray(_ref, 2),
-        team = _ref2[0],
-        score = _ref2[1];
-      var pct = Math.round(score / maxScore * 100);
-      html += "<div class=\"score-row\"><div class=\"score-bar team-".concat(team, "\" style=\"width:").concat(pct, "%\">").concat(state.teamNames[team], " - ").concat(score).concat(i == 0 ? ' 🏆' : '', "</div></div>");
-    });
-    card.innerHTML = html;
-    container.appendChild(card);
   };
   var _updateAndRender = function updateAndRender(data) {
     try {
@@ -187,6 +185,7 @@ if (!document.querySelector) {
     pollTimer = setInterval(fetchState, 5000);
   };
   var container = document.getElementById('cards');
+  var attractionsEl = document.getElementById('attractions-info');
   var defaultState = {
     players: {},
     bullTimes: [],
