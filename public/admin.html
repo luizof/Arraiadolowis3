@@ -94,5 +94,17 @@ body{
   <strong>Instalar app</strong><br>
   <span class="install-hint">Toque em compartilhar e add à tela de início</span>
 </div>
+<script>
+  (function(){
+    function hidePrompt(){
+      var el=document.querySelector('.install-prompt');
+      if(el) el.style.display='none';
+    }
+    if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone){
+      hidePrompt();
+    }
+    window.addEventListener('appinstalled',hidePrompt);
+  })();
+</script>
 </body>
 </html>
