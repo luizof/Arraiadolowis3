@@ -58,7 +58,8 @@ automatically during the build.
 docker run -p 3000:3000 -v /path/on/host:/app/data arraia
 ```
 
-Then access `http://localhost:3000/` for slides,
+Then access `http://localhost:3000/tv` for slides,
+`http://localhost:3000/` for the mobile view,
 `http://localhost:3000/admin.html` for the admin menu,
 `http://localhost:3000/players.html` to manage players,
 `http://localhost:3000/teams.html` to edit team names,

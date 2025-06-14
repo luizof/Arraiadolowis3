@@ -7,6 +7,17 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+
+// Serve mobile view at root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'mobile', 'index.html'));
+});
+
+// Serve slideshow view under /tv
+app.get('/tv', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 const DATA_FILE = process.env.DATA_FILE || path.join(process.env.DATA_DIR || path.join(__dirname, '..', 'data'), 'data.json');
