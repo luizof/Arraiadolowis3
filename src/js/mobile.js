@@ -81,6 +81,7 @@ function render(){
     container.appendChild(card);
   }
   if(state.beerPongs.length>0){
+    const pts=state.points.beerWin||0;
     const recent=state.beerPongs.slice().reverse();
     const card=document.createElement('div');
     card.className='card beer-card';
@@ -90,7 +91,7 @@ function render(){
       const team2Color=state.players[b.team2[0]];
       const trophy1=b.winner===team1Color?'🏆':'';
       const trophy2=b.winner===team2Color?'🏆':'';
-      html+=`<li><span class="team-${team1Color}">${b.team1[0]}</span> & <span class="team-${team1Color}">${b.team1[1]}</span>${trophy1} vs <span class="team-${team2Color}">${b.team2[0]}</span> & <span class="team-${team2Color}">${b.team2[1]}</span>${trophy2}</li>`;
+      html+=`<li><span class="team-${team1Color}">${b.team1[0]}</span> & <span class="team-${team1Color}">${b.team1[1]}</span>${trophy1} vs <span class="team-${team2Color}">${b.team2[0]}</span> & <span class="team-${team2Color}">${b.team2[1]}</span>${trophy2} (+${pts})</li>`;
     });
     html+='</ul>';
     card.innerHTML=html;

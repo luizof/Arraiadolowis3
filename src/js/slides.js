@@ -98,6 +98,7 @@ function render(){
     slides.push({color:'purple',image:bgImages.bingo,html});
   }
   if(state.beerPongs.length>0){
+    const pts = state.points.beerWin || 0;
     const recent = state.beerPongs.slice(-6).reverse();
     let html='<div class="beer-slide"><h1 class="beer-title">🍺 Beer Pong 🍺</h1><div class="beer-wrapper">';
     recent.forEach(b=>{
@@ -105,7 +106,7 @@ function render(){
       const team2Color=state.players[b.team2[0]];
       const trophy1=team1Color===b.winner?' 🏆':'';
       const trophy2=team2Color===b.winner?' 🏆':'';
-      html+=`<div class="beer-row"><span class="team-${team1Color}">${b.team1[0]}</span> & <span class="team-${team1Color}">${b.team1[1]}</span>${trophy1} vs <span class="team-${team2Color}">${b.team2[0]}</span> & <span class="team-${team2Color}">${b.team2[1]}</span>${trophy2}</div>`;
+      html+=`<div class="beer-row"><span class="team-${team1Color}">${b.team1[0]}</span> & <span class="team-${team1Color}">${b.team1[1]}</span>${trophy1} vs <span class="team-${team2Color}">${b.team2[0]}</span> & <span class="team-${team2Color}">${b.team2[1]}</span>${trophy2} (+${pts})</div>`;
     });
     html+='</div></div>';
     slides.push({color:'orange',image:bgImages.beer,html});
