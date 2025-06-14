@@ -98,14 +98,16 @@ function render(){
     slides.push({color:'purple',image:bgImages.bingo,html});
   }
   if(state.beerPongs.length>0){
-    let html='<div class="beer-slide">';
-    html+='<div class="beer-title">🍺 Beer Pong 🍺</div>';
-    html+='<table class="beer-table">';
-    state.beerPongs.slice(-5).forEach(b=>{
-      html+=`<tr><td><span class="team-${state.players[b.team1[0]]}">${b.team1[0]}</span></td><td><span class="team-${state.players[b.team2[0]]}">${b.team2[0]}</span></td><td rowspan="2">🏆 <span class="team-${b.winner}">${state.teamNames[b.winner]}</span></td></tr>`;
-      html+=`<tr><td><span class="team-${state.players[b.team1[1]]}">${b.team1[1]}</span></td><td><span class="team-${state.players[b.team2[1]]}">${b.team2[1]}</span></td></tr>`;
+    const recent = state.beerPongs.slice(-6).reverse();
+    let html='<div class="beer-slide"><h1 class="beer-title">🍺 Beer Pong 🍺</h1><div class="beer-wrapper">';
+    recent.forEach(b=>{
+      const team1Color=state.players[b.team1[0]];
+      const team2Color=state.players[b.team2[0]];
+      const trophy1=team1Color===b.winner?' 🏆':'';
+      const trophy2=team2Color===b.winner?' 🏆':'';
+      html+=`<div class="beer-row"><span class="team-${team1Color}">${b.team1[0]}</span> & <span class="team-${team1Color}">${b.team1[1]}</span>${trophy1} vs <span class="team-${team2Color}">${b.team2[0]}</span> & <span class="team-${team2Color}">${b.team2[1]}</span>${trophy2}</div>`;
     });
-    html+='</table></div>';
+    html+='</div></div>';
     slides.push({color:'orange',image:bgImages.beer,html});
   }
   if(state.pacalWars.length>0){
