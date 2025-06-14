@@ -18,8 +18,9 @@ table button{margin:0 0 0 5px;padding:4px 8px;font-size:14px;}
 <h1>Guerra de Cotonete</h1>
 <label>P1 <input id="cottonP1" list="players"></label>
 <label>P2 <input id="cottonP2" list="players"></label>
-<label>Vencedor <input id="cottonWin" list="players"></label>
+<label>Vencedor <input id="cottonWin" list="winnerList"></label>
 <button onclick="addCotton()">Registrar</button>
+<datalist id="winnerList"></datalist>
 <datalist id="players"></datalist>
 <h2>Histórico</h2>
 <table id="hist"></table>
@@ -54,6 +55,15 @@ async function addCotton(){
   cottonP1.value='';cottonP2.value='';cottonWin.value='';
 }
 const playersElem=document.getElementById('players');
+const winnerList=document.getElementById('winnerList');
+function updateWinnerOptions(){
+  const opts=[];
+  if(cottonP1.value.trim()) opts.push(cottonP1.value.trim());
+  if(cottonP2.value.trim() && cottonP2.value.trim()!=cottonP1.value.trim()) opts.push(cottonP2.value.trim());
+  winnerList.innerHTML=opts.map(n=>`<option value="${escapeHtml(n)}">`).join('');
+}
+cottonP1.addEventListener('input',updateWinnerOptions);
+cottonP2.addEventListener('input',updateWinnerOptions);
 function loadHistory(){
   fetch('/api/state').then(r=>r.json()).then(s=>{
     const rows=s.cottonWars.map((c,i)=>{
@@ -80,6 +90,7 @@ function del(i){
 }
 loadPlayers();
 loadHistory();
+updateWinnerOptions();
 </script>
 </body>
 </html>
