@@ -165,23 +165,18 @@ function updateAndRender(data){
 }
 
 function fetchState(){
-  var doFetch = window.fetch ? window.fetch : function(url){
-    return new Promise(function(resolve,reject){
-      try{
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url);
-        xhr.onload = function(){
-          resolve({ json: function(){ return Promise.resolve(JSON.parse(xhr.responseText)); } });
-        };
-        xhr.onerror = reject;
-        xhr.send();
-      }catch(e){reject(e);}
-    });
-  };
-  doFetch('/api/state')
-    .then(function(r){ return r.json(); })
-    .then(updateAndRender)
-    .catch(function(err){ return console.error('Polling failed', err); });
+  try{
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET','/api/state');
+    xhr.onload=function(){
+      if(xhr.status===200){
+        try{ updateAndRender(JSON.parse(xhr.responseText)); }
+        catch(e){ console.error('Erro ao analisar state', e); }
+      }
+    };
+    xhr.onerror=function(err){ console.error('Falha no polling', err); };
+    xhr.send();
+  }catch(e){ console.error('Polling exception', e); }
 }
 
 function startPolling(){
@@ -190,19 +185,6 @@ function startPolling(){
   pollTimer=setInterval(fetchState,5000);
 }
 
-function startWebSocket(){
-  if(!window.WebSocket){
-    console.warn('WebSocket indispon\u00EDvel, iniciando polling');
-    startPolling();
-    return;
-  }
-  const proto=location.protocol==='https:'?'wss':'ws';
-  const ws=new WebSocket(`${proto}://${location.host}`);
-  ws.onmessage=e=>{updateAndRender(JSON.parse(e.data));};
-  ws.onerror=()=>{console.warn('WebSocket erro, alternando para polling');startPolling();};
-  ws.onclose=()=>{console.warn('WebSocket fechado, alternando para polling');startPolling();};
-}
-
 render();
-startWebSocket();
+startPolling();
 }
