@@ -34,7 +34,7 @@ function render(){
   container.innerHTML='';
   if(state.bullTimes.length>0){
     const keys=['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
-    const sorted=[...state.bullTimes].sort((a,b)=>a.time-b.time).slice(0,5);
+    const sorted=[...state.bullTimes].sort((a,b)=>b.time-a.time).slice(0,5);
     const card=document.createElement('div');
     card.className='card bull-card';
     let html='<h2>Top Touro 🐂</h2><ol>';

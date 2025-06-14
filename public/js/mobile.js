@@ -25,7 +25,7 @@ if (!document.querySelector) {
     if (state.bullTimes.length > 0) {
       var keys = ['bullFirst', 'bullSecond', 'bullThird', 'bullFourth', 'bullFifth'];
       var sorted = _toConsumableArray(state.bullTimes).sort(function (a, b) {
-        return a.time - b.time;
+        return b.time - a.time;
       }).slice(0, 5);
       var _card = document.createElement('div');
       _card.className = 'card bull-card';
