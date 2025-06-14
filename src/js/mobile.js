@@ -99,11 +99,11 @@ function render(){
     const rows=[
       {name:state.bingoWinners.first,key:'bingoFirst',trophy:'🏆',pos:'1º'},
       {name:state.bingoWinners.second,key:'bingoSecond',pos:'2º'},
-      {name:state.bingoWinners.third,key:'bingoThird',pos:'3º'},
-    ];
+      {name:state.bingoWinners.third,key:'bingoThird',pos:'3º'}
+    ].filter(r=>r.name);
     rows.forEach((r,i)=>{
       const pts=state.points[r.key]||0;
-      html+=`<li>${r.pos} <span class="team-${state.players[r.name]}"> ${r.name||''} </span> (${pts} pts) ${r.trophy||''}</li>`;
+      html+=`<li>${r.pos} <span class="team-${state.players[r.name]}"> ${r.name} </span> (${pts} pts) ${r.trophy||''}</li>`;
     });
     html+='</ol>';
     card.innerHTML=html;
@@ -162,4 +162,8 @@ function startPolling(){
   pollTimer=setInterval(fetchState,5000);
 }
 startPolling();
+// Force a full page reload every 20 seconds on mobile
+setInterval(()=>{
+  try{ window.location.reload(); }catch(e){ console.error('Reload failed', e); }
+},20000);
 }

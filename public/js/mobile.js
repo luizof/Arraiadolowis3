@@ -115,10 +115,12 @@ if (!document.querySelector) {
         name: state.bingoWinners.third,
         key: 'bingoThird',
         pos: '3º'
-      }];
+      }].filter(function (r) {
+        return r.name;
+      });
       rows.forEach(function (r, i) {
         var pts = state.points[r.key] || 0;
-        _html3 += "<li>".concat(r.pos, " <span class=\"team-").concat(state.players[r.name], "\"> ").concat(r.name || '', " </span> (").concat(pts, " pts) ").concat(r.trophy || '', "</li>");
+        _html3 += "<li>".concat(r.pos, " <span class=\"team-").concat(state.players[r.name], "\"> ").concat(r.name, " </span> (").concat(pts, " pts) ").concat(r.trophy || '', "</li>");
       });
       _html3 += '</ol>';
       _card2.innerHTML = _html3;
@@ -220,4 +222,12 @@ if (!document.querySelector) {
   var state = _objectSpread({}, defaultState);
   var pollTimer;
   startPolling();
+  // Force a full page reload every 20 seconds on mobile
+  setInterval(function () {
+    try {
+      window.location.reload();
+    } catch (e) {
+      console.error('Reload failed', e);
+    }
+  }, 20000);
 }
