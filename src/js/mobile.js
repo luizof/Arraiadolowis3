@@ -114,7 +114,7 @@ function render(){
     const recent=state.beerPongs.slice().reverse();
     const card=document.createElement('div');
     card.className='card beer-card';
-    let html='<h2>🍺 Beer Pong 🍺</h2><ul>';
+    let html='<h2>Beer Pong 🍺</h2><ul>';
     recent.forEach(b=>{
       const team1Color=state.players[b.team1[0]];
       const team2Color=state.players[b.team2[0]];
