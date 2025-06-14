@@ -212,9 +212,16 @@ if (!document.querySelector) {
       schedule();
     }
   };
-  var updateAndRender = function updateAndRender(data) {
-    state = data;
-    render();
+  var _updateAndRender = function updateAndRender(data) {
+    try {
+      var serialized = JSON.stringify(data);
+      if (serialized === _updateAndRender.lastSerialized) return;
+      _updateAndRender.lastSerialized = serialized;
+      state = data;
+      render();
+    } catch (e) {
+      console.error('Erro ao atualizar slides', e);
+    }
   };
   var fetchState = function fetchState() {
     try {
@@ -223,7 +230,7 @@ if (!document.querySelector) {
       xhr.onload = function () {
         if (xhr.status === 200) {
           try {
-            updateAndRender(JSON.parse(xhr.responseText));
+            _updateAndRender(JSON.parse(xhr.responseText));
           } catch (e) {
             console.error('Erro ao analisar state', e);
           }
