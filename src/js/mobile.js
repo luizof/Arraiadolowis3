@@ -28,6 +28,7 @@ const defaultState={
     bingoThird:1
   },
   scores:{blue:0,yellow:0},
+  hiddenGames:{},
 };
 let state={...defaultState};
 let pollTimer;
@@ -61,7 +62,7 @@ function render(){
   });
   scoreCard.innerHTML=scoreHtml;
   container.appendChild(scoreCard);
-  if(state.bullTimes.length>0){
+  if(state.bullTimes.length>0 && !state.hiddenGames.bull){
     const keys=['bullFirst','bullSecond','bullThird','bullFourth','bullFifth'];
     const sorted=[...state.bullTimes].sort((a,b)=>b.time-a.time);
     const card=document.createElement('div');
@@ -75,7 +76,7 @@ function render(){
     card.innerHTML=html;
     container.appendChild(card);
   }
-  if(state.cottonWars.length>0){
+  if(state.cottonWars.length>0 && !state.hiddenGames.cotton){
     const pts=state.points.cottonWin||0;
     const recent=state.cottonWars.slice().reverse();
     const card=document.createElement('div');
@@ -92,7 +93,7 @@ function render(){
     card.innerHTML=html;
     container.appendChild(card);
   }
-  if(state.bingoWinners){
+  if(state.bingoWinners && !state.hiddenGames.bingo){
     const card=document.createElement('div');
     card.className='card bingo-card';
     let html='<h2>Bingo 🎉</h2><ol>';
@@ -109,7 +110,7 @@ function render(){
     card.innerHTML=html;
     container.appendChild(card);
   }
-  if(state.beerPongs.length>0){
+  if(state.beerPongs.length>0 && !state.hiddenGames.beer){
     const pts=state.points.beerWin||0;
     const recent=state.beerPongs.slice().reverse();
     const card=document.createElement('div');
@@ -126,7 +127,7 @@ function render(){
     card.innerHTML=html;
     container.appendChild(card);
   }
-  if(state.pacalWars.length>0){
+  if(state.pacalWars.length>0 && !state.hiddenGames.pacal){
     const pts=state.points.pacalWin||0;
     const recent=state.pacalWars.slice(-6).reverse();
     const card=document.createElement('div');
