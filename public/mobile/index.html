@@ -43,5 +43,17 @@ body{margin:0;padding:0;font-family:sans-serif;background:black;color:white;}
   <span class="install-hint">Toque em compartilhar e add à tela de início</span>
 </div>
 <script src="../js/mobile.js"></script>
+<script>
+  (function(){
+    function hidePrompt(){
+      var el=document.querySelector('.install-prompt');
+      if(el) el.style.display='none';
+    }
+    if(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone){
+      hidePrompt();
+    }
+    window.addEventListener('appinstalled',hidePrompt);
+  })();
+</script>
 </body>
 </html>
